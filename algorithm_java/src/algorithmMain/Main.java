@@ -1,9 +1,13 @@
-package baekjoon;
+package algorithmMain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+/**
+ * 
+ * @author kimja
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) throws IOException {
