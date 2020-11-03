@@ -1,3 +1,6 @@
+/**
+ * Åé´Ï¹ÙÄû
+ */
 package implementation;
 
 import java.io.BufferedReader;
@@ -5,144 +8,83 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class BOJ_14891 {
-
+	static int[][] wheel;
 	public static void main(String[] args) throws IOException {
-
+		
+		int round; 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		String[] cogwheel1 = br.readLine().split("");
-		String[] cogwheel2 = br.readLine().split("");
-		String[] cogwheel3 = br.readLine().split("");
-		String[] cogwheel4 = br.readLine().split("");
-		int K = Integer.parseInt(br.readLine());
 		
-		int total = 0;
+		wheel = new int[4][8];
 		
-		for (int i = 0; i < K; i++) {
-			
-			String input = br.readLine();
-			
-			int selcwheel = Integer.parseInt(input.split(" ")[0]);
-			int direct = Integer.parseInt(input.split(" ")[1]);
-			
-			if(selcwheel == 1) {
-				rotation(cogwheel1, direct);
-
-				if( !cogwheel1[2].equals(cogwheel2[6]) ) {
-					rotation(cogwheel2, -direct);
-					
-					if( !cogwheel2[2].equals(cogwheel3[6]) ) {
-						rotation(cogwheel3, direct);
-						
-						if( !cogwheel3[2].equals(cogwheel4[6]) ) {
-							rotation(cogwheel4, direct);
-						}
-					}
-				}
-				
-			}else if(selcwheel == 2) {
-				rotation(cogwheel2, direct);
-				
-				if( !cogwheel2[2].equals(cogwheel3[6]) ) {
-					rotation(cogwheel3, -direct);
-					
-					if( !cogwheel3[2].equals(cogwheel4[6]) ) {
-						rotation(cogwheel4, direct);
-					}
-				}
-				
-				if( !cogwheel2[6].equals(cogwheel1[2]) ) {
-					rotation(cogwheel1, -direct);
-				}
-				
-			}else if(selcwheel == 3) {
-				rotation(cogwheel3, direct);
-				
-				if( !cogwheel3[2].equals(cogwheel4[6]) ) {
-					rotation(cogwheel4, -direct);
-				}
-				
-				if( !cogwheel3[6].equals(cogwheel2[2]) ) {
-					rotation(cogwheel2, -direct);
-					
-					if( !cogwheel2[6].equals(cogwheel1[2]) ) {
-						rotation(cogwheel1, direct);
-					}
-				}
-				
-			}else if(selcwheel == 4) {
-				rotation(cogwheel4, direct);
-				
-				if( !cogwheel4[6].equals(cogwheel3[2]) ) {
-					rotation(cogwheel3, -direct);
-					
-					if( !cogwheel3[6].equals(cogwheel2[2]) ) {
-						rotation(cogwheel2, direct);
-						
-						if( !cogwheel2[6].equals(cogwheel1[2]) ) {
-							rotation(cogwheel1, -direct);
-						}
-					}
-				}
+		for (int i = 0; i < 4; i++) {
+			char[] temp = br.readLine().toCharArray();
+			for (int j = 0; j < 8; j++) {
+				wheel[i][j] = temp[j]-'0';
 			}
 		}
 		
-		//N±ØÀº 0
-		
-		if("0".equals(cogwheel1[0])) {
-			total +=0;
-		}else {
-			total +=1;
+		round = Integer.parseInt(br.readLine());
+		for (int i = 0; i < round; i++) {
+			String temp = br.readLine();
+			int target = Integer.parseInt(temp.split(" ")[0])-1;//¹è¿­ÀÌ¶ó 1 –A´Ù.
+			int direction= Integer.parseInt(temp.split(" ")[1]);
+			
+			left(target-1, -direction);
+			right(target+1, -direction);
+			rotateWheel(target, direction);
+			
 		}
 		
-		if("0".equals(cogwheel2[0])) {
-			total +=0;
-		}else {
-			total +=2;
+		//Á¡¼ö °è»ê
+//		1¹ø Åé´Ï¹ÙÄûÀÇ 12½Ã¹æÇâÀÌ N±ØÀÌ¸é 0Á¡, S±ØÀÌ¸é 1Á¡
+//		2¹ø Åé´Ï¹ÙÄûÀÇ 12½Ã¹æÇâÀÌ N±ØÀÌ¸é 0Á¡, S±ØÀÌ¸é 2Á¡
+//		3¹ø Åé´Ï¹ÙÄûÀÇ 12½Ã¹æÇâÀÌ N±ØÀÌ¸é 0Á¡, S±ØÀÌ¸é 4Á¡
+//		4¹ø Åé´Ï¹ÙÄûÀÇ 12½Ã¹æÇâÀÌ N±ØÀÌ¸é 0Á¡, S±ØÀÌ¸é 8Á¡
+		int result = 0;
+		for (int i = 0; i < 4; i++) {
+			result += wheel[i][0] * (1<<i);
+			
 		}
+		System.out.println(result);
+	}
+	
+	public static void left(int target, int direction) {
+		if (target <0) return;
 		
-		if("0".equals(cogwheel3[0])) {
-			total +=0;
-		}else {
-			total +=4;
+		if(wheel[target][2] != wheel[target+1][6]) {
+			left(target-1, -direction);
+			rotateWheel(target, direction);
 		}
-		
-		if("0".equals(cogwheel4[0])) {
-			total +=0;
-		}else {
-			total +=8;
-		}
-		
-		
-		System.out.println(total);
-		
 		
 	}
 	
-	
-	public static void rotation(String[] cogwheel, int direct) {
+	public static void right(int target, int direction) {
+		if (target >3) return;
 		
-		String temp="";
-		
-		if(direct == 1) {//½Ã°è ¹æÇâ
-			temp =cogwheel[7];
-			for (int i = 7; i > 1; i--) {
-				cogwheel[i] = cogwheel[i-1];
-			}
-			cogwheel[0]= temp;
-		}else {
-			temp =cogwheel[0];
-			for (int i = 0; i < cogwheel.length-1; i++) {
-				cogwheel[i]= cogwheel[i+1];
-			}
-			cogwheel[7] = temp;
+		if(wheel[target][6] != wheel[target-1][2]) {
+			right(target+1, -direction);
+			rotateWheel(target, direction);
+			
 		}
-		
 	}
-
+	
+	public static void rotateWheel(int target, int direction) {
+		int temp;
+		if(direction == 1) {// ½Ã°è¹æÇâ È¸Àü
+			temp = wheel[target][7];
+			for (int i = 7; i > 0; i--) {
+				wheel[target][i] = wheel[target][i-1];
+			}
+			wheel[target][0] = temp;
+			
+		}else if(direction == -1){// ¹Ý½Ã°è
+			temp = wheel[target][0];
+			for (int i = 0; i <7 ; i++) {
+				wheel[target][i] = wheel[target][i+1];
+			}
+			wheel[target][7] = temp;
+		}
+	}
 }
 
-class Rot{
-	int selcWheel;
-	int direction;
-}

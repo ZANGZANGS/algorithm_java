@@ -27,16 +27,15 @@ public class BOJ_1074 {
 		if(N == 0){
 			return 0;
 		} else {
-			int dist = 1<<(N-1);	// 2
+			int dist = 1<<(N-1);	// 좌표를 움직일 거리
 			
-			if(r<dist && c<dist) return zVisit(N-1, r, c);
-			else if(r<dist && c>=dist) return (dist*dist) + zVisit(N-1, r, c-dist);
-			else if(r>=dist && c<dist) return (dist*dist)*2 + zVisit(N-1, r-dist, c);
-			else return (dist*dist)*3 + zVisit(N-1, r-dist, c-dist);
+			if(r<dist && c<dist) return zVisit(N-1, r, c);								//1 
+			else if(r<dist && c>=dist) return (dist*dist) + zVisit(N-1, r, c-dist);		//2
+			else if(r>=dist && c<dist) return (dist*dist)*2 + zVisit(N-1, r-dist, c);	//3
+			else return (dist*dist)*3 + zVisit(N-1, r-dist, c-dist);					//4
 		}
 	}
 }
-
 
 
 
