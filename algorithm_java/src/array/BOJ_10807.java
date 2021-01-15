@@ -8,14 +8,14 @@ public class BOJ_10807 {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 
-		int[] arr = new int[101]; // 0 ~ 100 까지 0 인덱스는 사용안
+		int[] arr = new int[201]; // 0 ~ 100 까지 0 인덱스는 사용안
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int n = Integer.parseInt(br.readLine());
 		
 		String[] input = br.readLine().split(" ");
 		
 		for (String num : input) {
-			int idx = Integer.parseInt(num);
+			int idx = Integer.parseInt(num)+100;
 			
 			arr[idx] = arr[idx]+1;
 			
@@ -23,7 +23,7 @@ public class BOJ_10807 {
 		
 		int at = Integer.parseInt(br.readLine());
 		
-		System.out.println(arr[at]);
+		System.out.println(arr[at+100]);
 	}
 
 }
