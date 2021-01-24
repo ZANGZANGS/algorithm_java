@@ -16,39 +16,38 @@ public class BOJ_1406 {
 		String input = br.readLine();
 		LinkedList<Character> list = new LinkedList<Character>();
 		
-		//¸®½ºÆ®¿¡ ÀÔ·Â°ª ³Ö±â
+		//ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ô·Â°ï¿½ ï¿½Ö±ï¿½
 		for (int i = 0; i < input.length(); i++) {
 			list.add(input.charAt(i));
 		}
-		//¶ó¿îµå
-		int round = Integer.parseInt(br.readLine());
 		
+		//ï¿½ï¿½ï¿½ï¿½
+		int round = Integer.parseInt(br.readLine());
 		ListIterator<Character> liter = list.listIterator();
 		
-		while (liter.hasNext()) {//Ä¿¼­ÀÌµ¿
+		while (liter.hasNext()) {//ì»¤ì„œë¥¼ ë§ˆì§€ë§‰ìœ¼ë¡œ ì´ë™
 			liter.next();
 		}
 		
 		for (int i = 0; i < round; i++) {
 			String commend = br.readLine();
 			char cmd = commend.charAt(0);
-			if('L'== cmd) {
+			
+			if('L' == cmd) {
 				if(liter.hasPrevious()) liter.previous();
-				
-			}else if('D'==cmd) {
+			}else if('D' == cmd) {
 				if(liter.hasNext()) liter.next();
-				
-			}else if('B'==cmd) {
+			}else if('B' == cmd) {
 				if(liter.hasPrevious()) {
 					liter.previous();
 					liter.remove();
 				}
-			}else if('P'==cmd) {
+			}else if('P' == cmd) {
 				liter.add(commend.charAt(2));
 			}
 		}
 		
-		for (char c : list) {
+		for(char c : list) {
 			bw.append(c);
 		}
 		
