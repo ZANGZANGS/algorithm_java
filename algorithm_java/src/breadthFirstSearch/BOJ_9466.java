@@ -3,64 +3,64 @@ package breadthFirstSearch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class BOJ_9466 {
 
-	public static void main(String[] args) throws IOException{
+	static int[] arr;
+	static boolean[] vis;
+	static boolean[] done;
+	static int n;
+	static int result;
+	
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int round = Integer.parseInt(br.readLine());
-		Stack<Integer> stack = new Stack<Integer>();
+		int t = Integer.parseInt(br.readLine());
 		
-		
-		for (int i = 0; i < round; i++) {
-			int stuNumber = Integer.parseInt(br.readLine());
-			int[] arr = new int[stuNumber+1];
-			boolean[] vis = new boolean[stuNumber+1];
-			int count=stuNumber;
+		for (int i = 0; i < t; i++) {
 			
-			String[] input = br.readLine().split(" ");
+			n = Integer.parseInt(br.readLine());
+			arr = new int[n+1];
+			vis = new boolean[n+1];
+			done = new boolean[n+1];
+			result=0;
 			
-			for (int j = 1; j < arr.length; j++) {
-				//stack.clear();	//ÃÊ±âÈ­
-				int first = j;
-				stack.add(first);
-				
-				if(vis[first]) continue;	//  ÀÌ¹Ì ¹æ¹®ÇÑ °÷ÀÌ¸é continue
-				
-				while (! stack.isEmpty()) {
-					int temp = stack.peek();
-					int next = Integer.parseInt(input[temp-1]);
-					
-					if(vis[temp] || vis[next]) {
-						stack.clear();
-						break;	//  ÀÌ¹Ì ¹æ¹®ÇÑ °÷ÀÌ¸é continue
-					}
-					
-					if(first == next){
-						stack.add(next);
-						while (! stack.isEmpty()) {
-							int aa = stack.pop(); 
-							if(!vis[aa]) {
-								vis[aa] = true; 
-								 count--;
-							 }
-							
-						}
-					
-					}else if(temp == next){
-						stack.clear();
-					}else if(first != next) {
-						stack.add(next);
-					} 
-					
-				}
-				
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			
+			for (int j = 1; j <= n; j++) {
+				arr[j] = Integer.parseInt(st.nextToken());
 			}
 			
+			for (int j = 1; j <= n; j++) {
+				if(done[j]) continue;
+				bfs(j);
+			}
 			
-			System.out.println(count);
+			System.out.println(n-result);
+			
 		}
+				
+		
+	}
+	static void bfs(int n) {
+		
+		if(vis[n]) {
+			//ì´ë¯¸ ë°©ë¬¸í•œ ê³³ì´ë©´
+			done[n] = true;
+			result++;
+		}else {
+			vis[n]=true;
+		}
+		
+		int next = arr[n];
+		
+		if(!done[next]) {
+			bfs(next);
+		}
+		
+		vis[n] = false;
+		done[n] = true;
+		
 	}
 }
