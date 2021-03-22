@@ -3,64 +3,93 @@ package breadthFirstSearch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
-import com.sun.javafx.collections.MappingChange.Map;
+public class BOJ_2206  {
 
-public class BOJ_2206 {
-
+	static int col;
+	static int row;
+	static int[] dx = {0,1,0,-1};
+	static int[] dy = {1,0,-1,0};
+	static Queue<int[]> Q;
+	
+	//1. 지도 정보
+	static int[][] map;
+	//2. 거리정보
+	static int[][] dist;
+	
 	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader (System.in));
-		String nm = br.readLine();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		col = Integer.parseInt(st.nextToken());
+		row = Integer.parseInt(st.nextToken());
+
+		//1. 지도 정보
+		map = new int[col][row];
+		//2. 거리 정보
+		dist = new int[col][row];
 		
-		int n,m;
+		Q = new LinkedList<>();
 		
-		n = Integer.parseInt(nm.split(" ")[0]);	//행 row
-		m = Integer.parseInt(nm.split(" ")[1]); //열 col
-		
-		int[][] metrix = new int[n][m];
-		int[][] dist = new int[n][m];
-		
-		Queue<int[]> q = new LinkedList<int[]>();
-		
-		int[] dx = {0,1,0,-1};
-		int[] dy = {1,0,-1,0};
-		//input data metrix
-		for (int i = 0; i < n; i++) {
-			String input = br.readLine();
-			for (int j = 0; j < m; j++) {
-				metrix[i][j] = input.charAt(j) - '0';
+		//지도 정보 입력
+		for (int i = 0; i < col; i++) {
+			char[] input = br.readLine().toCharArray();
+			
+			for (int j = 0; j < row; j++) {
+				map[i][j] = input[j]-'0';
 			}
 		}
 		
-		//bfs
-		q.add(new int[] {0,0});
 		dist[0][0] = 1;
+		Q.add(new int[] {0,0,0});//x,y, 벽 돌파 횟수
+
+		bfs();
 		
-		while (!q.isEmpty()) {
-			int[] tmp = q.poll();
+		System.out.println(dist[col-1][row-1] == 0 ? "-1" :dist[col-1][row-1]);
+	}
+	
+	static void bfs() {
+		
+		while (!Q.isEmpty()) {
+			int[] temp = Q.poll();
 			
 			for (int i = 0; i < 4; i++) {
-				int nx = tmp[0] + dx[i];
-				int ny = tmp[1] + dy[i];
+				int nx = temp[0]+dx[i];
+				int ny = temp[1]+dy[i];
 				
-				if(nx<0 || ny<0 || nx >=n || ny>= m) continue;
-				if(dist[nx][ny] >0) continue;
-				if(metrix[nx][ny] == 1) continue;	//벽이면
+				boolean isBroken = temp[2]==1 ? true : false;
 				
-				q.add(new int[] {nx,ny});
-				dist[nx][ny] = dist[tmp[0]][tmp[1]] +1;
+				// 조건1 맵을 벗어나는지 확인
+				if(nx < 0 || ny < 0 || nx >= row || ny >= col) continue;
+				
+				//조건2 방문 유무 확인
+				if(dist[ny][nx] > 0 && isBroken) continue;
+				
+				//조건3 진행 불가 벽을 만났고, 이미 벽을 부숨
+				if(map[ny][nx] == 1 && isBroken) {
+					continue;
+					
+				} 
+				//조건4 벽을 만났으나 벽을 부술 수 있음
+				if(map[ny][nx] == 1 && !isBroken) {
+					dist[ny][nx] = dist[temp[1]][temp[0]]+1;
+					Q.add(new int[] {nx,ny, 1});
+					
+				}
+				
+				//길이여서 계속 진행
+				if(map[ny][nx] == 0 ) {//길임
+					dist[ny][nx] = dist[temp[1]][temp[0]]+1;
+					Q.add(new int[] {nx,ny, temp[2]});
+					
+				}
 			}
-			
+		
 		}
-		
-		if(dist[n-1][m-1] != 0) System.out.println(dist[n-1][m-1]);
-		
-		
-		
-		
-		
 	}
-
 }
