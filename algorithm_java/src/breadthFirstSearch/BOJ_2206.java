@@ -3,7 +3,6 @@ package breadthFirstSearch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -19,7 +18,8 @@ public class BOJ_2206  {
 	//1. 지도 정보
 	static int[][] map;
 	//2. 거리정보
-	static int[][] dist;
+	static int[][] distA; //벽 안부숴짐
+	static int[][] distB; //벽 부숴짐
 	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,7 +32,8 @@ public class BOJ_2206  {
 		//1. 지도 정보
 		map = new int[col][row];
 		//2. 거리 정보
-		dist = new int[col][row];
+		distA = new int[col][row];
+		distB = new int[col][row];
 		
 		Q = new LinkedList<>();
 		
@@ -45,12 +46,15 @@ public class BOJ_2206  {
 			}
 		}
 		
-		dist[0][0] = 1;
+		distA[0][0] = 1;
+		distB[0][0] = 1;
 		Q.add(new int[] {0,0,0});//x,y, 벽 돌파 횟수
 
 		bfs();
-		
-		System.out.println(dist[col-1][row-1] == 0 ? "-1" :dist[col-1][row-1]);
+		int result = Integer.MAX_VALUE;
+		if(distA[col-1][row-1] != 0) result = Math.min(distA[col-1][row-1], result);
+		if(distB[col-1][row-1] != 0) result = Math.min(distB[col-1][row-1], result);
+		System.out.println(result != Integer.MAX_VALUE ? result : -1);
 	}
 	
 	static void bfs() {
@@ -68,7 +72,8 @@ public class BOJ_2206  {
 				if(nx < 0 || ny < 0 || nx >= row || ny >= col) continue;
 				
 				//조건2 방문 유무 확인
-				if(dist[ny][nx] > 0 && isBroken) continue;
+				if(distA[ny][nx] > 0 && !isBroken) continue;
+				if(distB[ny][nx] > 0 && isBroken) continue;
 				
 				//조건3 진행 불가 벽을 만났고, 이미 벽을 부숨
 				if(map[ny][nx] == 1 && isBroken) {
@@ -77,14 +82,18 @@ public class BOJ_2206  {
 				} 
 				//조건4 벽을 만났으나 벽을 부술 수 있음
 				if(map[ny][nx] == 1 && !isBroken) {
-					dist[ny][nx] = dist[temp[1]][temp[0]]+1;
+					distB[ny][nx] = distA[temp[1]][temp[0]]+1;
 					Q.add(new int[] {nx,ny, 1});
 					
 				}
 				
 				//길이여서 계속 진행
 				if(map[ny][nx] == 0 ) {//길임
-					dist[ny][nx] = dist[temp[1]][temp[0]]+1;
+					if(isBroken) {
+						distB[ny][nx] = distB[temp[1]][temp[0]]+1;
+					}else {
+						distA[ny][nx] = distA[temp[1]][temp[0]]+1;
+					}
 					Q.add(new int[] {nx,ny, temp[2]});
 					
 				}
