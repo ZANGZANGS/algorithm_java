@@ -1,4 +1,4 @@
-package codingTest_NHN_2020_2;
+package z.codingTest_NHN_2020_2;
 
 import java.util.ArrayList;
 import java.util.List;
