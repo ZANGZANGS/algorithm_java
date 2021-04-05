@@ -16,9 +16,16 @@ public class InputOutput  {
 		StringBuilder sb = new StringBuilder();
 		StringBuffer sbu = new StringBuffer();
 		
+//		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		int n = Integer.parseInt(br.readLine());
+		
+		int[] arr = new int[n];
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
-
+		
+		for (int i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
 		
 	}
 
