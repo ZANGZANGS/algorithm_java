@@ -3,7 +3,6 @@ package dynamicprogramming;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_14501  {
@@ -15,7 +14,7 @@ public class BOJ_14501  {
 		
 		int[] jobT = new int[n+10];
 		int[] jobP = new int[n+10];
-		int[] dp = new int[n+10]; // n까지 얻는 최대 이익
+		int[] dp = new int[n+10]; // n일차에 얻는 최대 이익
 		
 		for (int i = 1; i <= n; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
@@ -28,8 +27,12 @@ public class BOJ_14501  {
 
 		for (int i = 1; i <= n+1; i++) {
 			
+			//i일차의 최대 이익 
 			dp[i] = Math.max(dp[i], result);
-            dp[jobT[i]+i] = Math.max(dp[jobT[i]+i],jobP[i]+dp[i]);
+			
+			//jobT[i]+i 오늘까지의 총 근무일수
+            dp[jobT[i]+i] = Math.max(dp[jobT[i]+i], jobP[i]+dp[i]);
+            
             result = Math.max(result, dp[i]);
 		}
 		
