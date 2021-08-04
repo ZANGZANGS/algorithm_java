@@ -9,77 +9,74 @@ import java.util.StringTokenizer;
 
 public class BOJ_1926 {
 	public static void main(String args[]) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String nm = br.readLine();
-		int inputN = Integer.parseInt(nm.split(" ")[0]);
-		int inputM = Integer.parseInt(nm.split(" ")[1]);
-		
-		boolean vis[][] = new boolean[inputN][inputM];
-		int picture[][] = new int[inputN][inputM];
-		
-		int dx[] = {0,1,0,-1};
-		int dy[] = {1,0,-1,0};
-		
-		int pictureMax = 0;
-		int pictureCnt = 0;
-		
-		Queue<Pair> queue = new LinkedList<Pair>();
-		
-		for (int i = 0; i < inputN; i++) {
-			String input = br.readLine();
-			StringTokenizer st = new StringTokenizer(input," ");
-			
-			for (int j = 0; j < inputM; j++) {
-				
-				picture[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-		
-		//bfs
-		for (int i = 0; i < inputN; i++) {
-			for (int j = 0; j < inputM; j++) {
-				if(picture[i][j] == 1 && !vis[i][j]) {
-					
-					vis[i][j] = true;
-					queue.add(new Pair(i,j));
-					
-					pictureCnt++;
-					int pictureSize=1;
-					
-					while (!queue.isEmpty()) {
-						Pair pair = queue.poll();
-						
-						for(int dir=0; dir<4 ;dir++) {
-							int nx = pair.x + dx[dir];
-							int ny = pair.y + dy[dir];
-							
-							if(nx<0 || ny<0 || nx >= inputN || ny >= inputM) continue;
-							if(vis[nx][ny] || picture[nx][ny] == 0) continue;
-							
-							vis[nx][ny] = true;
-							queue.add(new Pair(nx, ny));
-							pictureSize++;
-						}
-					}
-					
-					if(pictureMax < pictureSize) pictureMax = pictureSize;
-				}
-			}
-		}
-		
-		System.out.println(pictureCnt);
-		System.out.println(pictureMax);
-		
-	}
-}
 
-class Pair{
-	int x;
-	int y;
-	
-	public Pair(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int n, m;
+		int pictureCnt = 0;
+		int maxArea = 0;
+		int[] dx = { 0, 1, 0, -1 };
+		int[] dy = { 1, 0, -1, 0 };
+		Queue<int[]> Q = new LinkedList<>();
+
+		String[] input = br.readLine().split(" ");
+
+		n = Integer.parseInt(input[0]); // 세로 y
+		m = Integer.parseInt(input[1]); // 가로 x
+
+		int[][] arr = new int[n][m];
+		boolean[][] vis = new boolean[n][m];
+
+		for (int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < m; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		for (int i = 0; i < n; i++) { // 시작점 찾기
+			for (int j = 0; j < m; j++) {
+
+				if (arr[i][j] == 0 || vis[i][j] == true) {
+					continue;
+				}
+
+				Q.add(new int[] { i, j });
+				vis[i][j] = true;
+				pictureCnt++;
+
+				int pSize = 1;
+
+				while (!Q.isEmpty()) { // BFS
+					int[] temp = Q.poll();
+
+					int y = temp[0];
+					int x = temp[1];
+
+					for (int k = 0; k < 4; k++) {
+						int ny = y + dy[k];
+						int nx = x + dx[k];
+
+						if (nx < 0 || ny < 0 || nx >= m || ny >= n)
+							continue;
+						if (vis[ny][nx] == true)
+							continue;
+						if (arr[ny][nx] == 0)
+							continue;
+
+						vis[ny][nx] = true;
+						Q.add(new int[] { ny, nx });
+						arr[ny][nx] = pSize++;
+					}
+
+				}
+				maxArea = Math.max(maxArea, pSize);
+				
+			}
+		}
+
+		System.out.println(pictureCnt);
+		System.out.println(maxArea);
+
+		}
 }
