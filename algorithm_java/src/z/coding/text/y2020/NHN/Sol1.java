@@ -1,4 +1,4 @@
-package z.codingTest_NHN_2020_2;
+package z.coding.text.y2020.NHN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +7,16 @@ import java.util.Scanner;
 class Sol1 {
   private static void solution(int numOfAllPlayers, int numOfQuickPlayers, char[] namesOfQuickPlayers, int numOfGames, int[] numOfMovesPerGame){
 	  
-	  //numOfQuickPlayers »¡¶ó¼­ ¸øÀâ´Â ¾Öµé ½´
-	  //namesOfQuickPlayers ºü¸¥¾Öµé ÀÌ¸§
-	  // numOfGames °ÔÀÓ ÁøÇà È½¼ö
-	  // numOfMovesPerGame °ÔÀÓº° ¸îÄ­ ¿òÁ÷ÀÌ´ÂÁö 
+	  //numOfQuickPlayers ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Öµï¿½ ï¿½ï¿½
+	  //namesOfQuickPlayers ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ ï¿½Ì¸ï¿½
+	  // numOfGames ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½
+	  // numOfMovesPerGame ï¿½ï¿½ï¿½Óºï¿½ ï¿½ï¿½Ä­ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ 
 	  
 	  List<Gamer> list = new ArrayList<Gamer>();
-	  int peek = 0;	//¼ú·¡ À§Ä¡
+	  int peek = 0;	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 	  
 	
-	  // ¼ú·¡ Á¤ÇÏ±â Ã³À½Àº A
+	  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ A
 	  Gamer sulre = new Gamer('A', 1, false);
 	  for (int j = 0; j < numOfQuickPlayers; j++) {
 		  if(namesOfQuickPlayers[j] == 'A') {
@@ -24,7 +24,7 @@ class Sol1 {
 		  }
 	  }
 	  
-	  // Âü°¡ÀÚ Á¤ÇÏ±â
+	  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
 	  for (int i = 0; i < numOfAllPlayers-1; i++) {
 		  list.add(new Gamer((char)('B'+i), 0, false));
 		  
@@ -35,14 +35,14 @@ class Sol1 {
 		}
 	}
 	  
-	 //°ÔÀÓ ÁøÇà
+	 //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	  for (int i = 0; i < numOfGames; i++) {
 		  int runCnt = numOfMovesPerGame[i];
 		  
-		  // ¹ÙÄû¼ö ÁÙÀÌ°í,,
+		  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½,,
 		  runCnt %= (numOfAllPlayers-1);
 		  
-		  // ¼ö°Ç ³õ´Â À§Ä¡ È®ÀÎÇÏ°í,,
+		  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ È®ï¿½ï¿½ï¿½Ï°ï¿½,,
 		 if(peek+ runCnt > (numOfAllPlayers-1)) {
 			 peek = (peek+ runCnt) - (numOfAllPlayers-1);
 		 }else if(peek+ runCnt < 0) {
@@ -51,7 +51,7 @@ class Sol1 {
 			 peek += runCnt;
 		 }
 		 //System.out.println("peek:"+peek);
-		 // ¼ú·¡ ¹Ù²ÜÁö È®ÀÎÇÏ´Â ÄÚµå,,
+		 // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Úµï¿½,,
 		 Gamer target = list.get(peek);
 		 
 		 if(target.fast) {
