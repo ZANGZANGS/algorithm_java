@@ -7,6 +7,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+
+/**
+ * @source		: 백준
+ * @algorithm	: BFS
+ * @description	: 1926 그림
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.08.04	Queue에 출발점을 넣고 방문체크를 안해서 오답이 남.
+ */
 public class BOJ_1926 {
 	public static void main(String args[]) throws IOException {
 
