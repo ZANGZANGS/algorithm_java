@@ -2,93 +2,83 @@ package breadthFirstSearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
+/**
+ * @source		: Î∞±Ï§Ä
+ * @algorithm	: BFS
+ * @description	: ÌÜ†ÎßàÌÜ†
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.08.06	
+ */
 public class BOJ_7576 {
 
 	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String inputBox;
-		int N,M;
-		int[][] box;
-		int[][] dist;
-		boolean[][] vis;
+
+		BufferedReader br = new BufferedReader(new java.io.InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		
 		int[] dx = {0,1,0,-1};
 		int[] dy = {1,0,-1,0};
-		Queue<Dot2> queue = new LinkedList<Dot2>();
 		
-		inputBox = br.readLine();
-		N = Integer.parseInt(inputBox.split(" ")[1]);
-		M = Integer.parseInt(inputBox.split(" ")[0]);
-		box = new int[N][M];
-		dist = new int[N][M];
-		vis = new boolean[N][M];
+		int M = Integer.parseInt(st.nextToken());	//X
+		int N = Integer.parseInt(st.nextToken());	//Y
 		
-		boolean isGo = false;
-
-		//box data
-		for (int i = 0; i < N; i++) {
-			String input = br.readLine();
-			StringTokenizer st = new StringTokenizer(input, " ");
+		int[][] arr = new int[N][M];
+		boolean[][] vis= new boolean[N][M];
+		
+		Queue<int[]> Q = new LinkedList<int[]>();
+		
+		for (int i = 0; i < N; i++) {	// Y
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
-				box[i][j]= Integer.parseInt(st.nextToken());
-				
-				if(box[i][j] == 1) {
-					queue.add(new Dot2(i,j));
-					//dist[i][j] = 0;
-				}else if(box[i][j] == 0) {
-					dist[i][j] = -1;
+				arr[i][j] = Integer.parseInt(st.nextToken());
+				if(arr[i][j] == 1) {
+					Q.add(new int[] {j,i}); //(x,y)
+					vis[i][j] = true;
 				}
 			}
 		}
 		
-		//bfs
-		while (!queue.isEmpty()) {
-			Dot2 temp = queue.poll();
+		while (!Q.isEmpty()) {
+			int[] cur = Q.poll();
 			
-			for (int k = 0; k < 4; k++) {
-				int nx = temp.x + dx[k];
-				int ny = temp.y + dy[k];
+			int x = cur[0];
+			int y = cur[1];
+			
+			for (int k = 0; k < 4 ; k++) {
+				int nx = x + dx[k];
+				int ny = y + dy[k];
 				
-				if(nx <0 || ny <0 || nx>= N || ny >= M) continue;
-				if(box[nx][ny] == -1 ) continue;	//∏∑»˘∞ÊøÏ
-				if(dist[nx][ny] >= 0 ) continue;	//¿ÃπÃ ≈‰∏∂≈‰∞° ¿Õ¿Ω (0∫Œ≈Õ ¿Õ¿∫ ≈‰∏∂≈‰)
+				if(nx<0 || ny <0 || nx>=M || ny>= N) continue;
+				if(arr[ny][nx] == -1) continue;
+				if(vis[ny][nx] == true) continue;
 				
-				dist[nx][ny] = dist[temp.x][temp.y]+1;
-				queue.add(new Dot2(nx, ny));
-					
+				arr[ny][nx] = arr[y][x]+1;
+				Q.add(new int[] {nx,ny}); //(x,y)
+				vis[ny][nx] = true;
+				
 			}
 		}
 		
-		int result=0;
+		int result = 0;
 		
-			for (int i = 0; i < N; i++) {
-				if(result == -1) break;
-				for (int j = 0; j < M; j++) {
-					if(dist[i][j] == -1) {
-						result = -1;
-						break;
-					}else if(result < dist[i][j]){
-						result = dist[i][j];
-					}
+		for (int[] row : arr) {
+			if(result == -1) break;
+			for (int tmt : row) {
+				if(tmt == 0) {
+					result = -1;
+					break;
 				}
+				result = Math.max(result, tmt);
 			}
+		}
 		
+		if(result != -1) result = result -1;
 		System.out.println(result);
 		
-		
-	}
-}
-
-class Dot2{
-	int x;
-	int y;
-	
-	public Dot2(int x, int y) {
-		this.x = x;
-		this.y = y;
 	}
 }
