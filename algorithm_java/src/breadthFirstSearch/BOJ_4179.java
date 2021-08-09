@@ -5,48 +5,53 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-
+import java.util.StringTokenizer;
+/**
+ * @source		: ë°±ì¤€
+ * @algorithm	: BFS
+ * @description	: ë¶ˆ!
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.08.09	ì¬í’€ì´
+ */
 public class BOJ_4179 {
 
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int R,C;
-		String[][] miro;
-		int[][] dist1;
-		int[][] dist2;
-		Queue<int[]> fQ = new LinkedList<int[]>();
-		Queue<int[]> jQ = new LinkedList<int[]>();
+		int R = Integer.parseInt(st.nextToken());	//x
+		int C = Integer.parseInt(st.nextToken());	//y
+		
 		int[] dx = {0,1,0,-1};
 		int[] dy = {1,0,-1,0};
 		
-		String miroSize = br.readLine();
-		R = Integer.parseInt(miroSize.split(" ")[0]);
-		C = Integer.parseInt(miroSize.split(" ")[1]);
+		Queue<int[]> fQ = new LinkedList<int[]>();
+		Queue<int[]> jQ = new LinkedList<int[]>();
 		
-		miro = new String[R][C];
-		dist1 = new int[R][C];
-		dist2 = new int[R][C];
+		String[][] miro = new String[C][R];
+		int[][] fireDist = new int[C][R];
+		int[][] jihoonDist = new int[C][R];
 		
-		//µ¥ÀÌÅÍ ÀÔ·Â
-		for (int i = 0; i < R; i++) {
-			String[] input = br.readLine().split("");
-			for (int j = 0; j < C; j++) {
-				miro[i][j] = input[j];
+		for (int i = 0; i < C; i++) {
+			String[] miroInput = br.readLine().split("");
+			for (int j = 0; j < R; j++) {
+				miro[i][j] = miroInput[j];
 				
 				if("J".equals(miro[i][j])) {
-					dist2[i][j] = 1;
-					jQ.add(new int[] {i,j});
+					jihoonDist[i][j] = 1;
+					jQ.add(new int[] {j,i});	//ì§€í›ˆì´ ì¶œë°œì  x,y
 					
 				}
 				else if("F".equals(miro[i][j])) {
-					 dist1[i][j] = 1;
-					 fQ.add(new int[] {i,j});
+					 fireDist[i][j] = 1;
+					 fQ.add(new int[] {j,i});	//ë¶ˆ ì¶œë°œì  x,y
 					 
 				}
-				else if(".".equals(miro[i][j])) {
-					dist1[i][j] = -1;
-					dist2[i][j] = -1;
+				else if(".".equals(miro[i][j])) {	//ì´ë™ ê°€ëŠ¥í•œ ê³³ -1ë¡œ ì´ˆê¸°í™”
+					fireDist[i][j] = -1;
+					jihoonDist[i][j] = -1;
 				}
 				
 			}
@@ -57,16 +62,18 @@ public class BOJ_4179 {
 			
 			int[] loc = fQ.poll();
 			
-			for (int i = 0; i < 4; i++) {
-				int nx = loc[0]+dx[i];
-				int ny = loc[1]+dy[i];
+			int x = loc[0];
+			int y = loc[1];
+			
+			for (int k = 0; k < 4; k++) {
+				int nx = x+dx[k];
+				int ny = y+dy[k];
 				
+				if(nx <0 || ny <0 || nx >= R || ny >= C) continue;	// ë°°ì—´ ë²”ìœ„ ì²´í¬
+				if("#".equals(miro[ny][nx])) continue;				// ë²½ì²´í¬
+				if(fireDist[ny][nx] >= 1) continue;					// ì´ë¯¸ ì§€ë‚˜ê°„ ê³³ì€  pass
 				
-				if(nx <0 || ny <0 || nx >= R || ny >= C) continue;	// ¹üÀ§¸¦ ¹ş¾î³ª¸é pass
-				if("#".equals(miro[nx][ny])) continue;				// º®ÀÌ¸é pass
-				if(dist1[nx][ny] >= 1) continue;					// ÀÌ¹Ì Áö³ª°£ °÷Àº  pass
-				
-				dist1[nx][ny] = dist1[loc[0]][loc[1]]+1;
+				fireDist[ny][nx] = fireDist[y][x]+1;
 				fQ.add(new int[] {nx,ny});
 			}
 		}
@@ -76,24 +83,25 @@ public class BOJ_4179 {
 			
 			int[] loc = jQ.poll();
 			
-			for (int i = 0; i < 4; i++) {
-				int nx = loc[0]+dx[i];
-				int ny = loc[1]+dy[i];
+			int x = loc[0];
+			int y = loc[1];
+			
+			for (int k = 0; k < 4; k++) {
+				int nx = x+dx[k];
+				int ny = y+dy[k];
 				
-				if(nx <0 || ny <0 || nx >= R || ny >= C) { 				// ¹üÀ§¸¦ ¹ş¾î³ª¸é Å»Ãâ
-					System.out.println(dist2[loc[0]][loc[1]]);
+				if(nx <0 || ny <0 || nx >= R || ny >= C) {
+					System.out.println(jihoonDist[y][x]); //ì§€í›ˆì´ê°€ ë°°ì—´ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ëŠ” ìˆœê°„ íƒˆì¶œ ì„±ê³µ
 					return;
 				}
-				if("#".equals(miro[nx][ny])) continue;					// º®ÀÌ¸é pass
-				if(dist2[nx][ny] >= 1) continue;						// ÀÌ¹Ì Áö³ª°£ °÷Àº  pass
-				if(dist1[nx][ny] != -1 && dist2[loc[0]][loc[1]]+1 >= dist1[nx][ny] ) continue;	// ºÒÀÌ Áö³ª°£ ÀÚ¸®ÀÌ¸é¼­ && ºÒÀÇ °Å¸® º¸´Ù ÁöÈÆÀÌ °Å¸®°¡ Å©°Å³ª °°À¸¸é pass
+				if("#".equals(miro[ny][nx])) continue;				// ë²½ì²´í¬
+				if(jihoonDist[ny][nx] >= 1) continue;	// ì´ë¯¸ ì§€í›ˆì´ê°€ ì§€ë‚˜ê°„ ê³³
+				if(fireDist[ny][nx] != -1 && jihoonDist[y][x]+1 >= fireDist[ny][nx] ) continue;	//ë¶ˆì´ ì´ë¯¸ ì§€ë‚˜ê°”ëŠ”ì§€
 				
-				
-				
-				dist2[nx][ny] = dist2[loc[0]][loc[1]]+1;
+				jihoonDist[ny][nx] = jihoonDist[y][x]+1;
 				jQ.add(new int[] {nx,ny});
 			}
 		}
-		System.out.println("IMPOSSIBLE");	// Å¥°¡ ºñ¾î¼­ ¿©±â±îÁö ¿À¸é ½ÇÆĞ
+		System.out.println("IMPOSSIBLE");
 	}
 }
