@@ -27,16 +27,17 @@ public class BOJ_4179 {
 		int[] dx = {0,1,0,-1};
 		int[] dy = {1,0,-1,0};
 		
-		Queue<int[]> fQ = new LinkedList<int[]>();
-		Queue<int[]> jQ = new LinkedList<int[]>();
+		Queue<int[]> fQ = new LinkedList<int[]>();	//fire
+		Queue<int[]> jQ = new LinkedList<int[]>();	//jihoon
 		
 		String[][] miro = new String[C][R];
 		int[][] fireDist = new int[C][R];
 		int[][] jihoonDist = new int[C][R];
 		
-		for (int i = 0; i < C; i++) {
+		
+		for (int i = 0; i < C; i++) {	//y
 			String[] miroInput = br.readLine().split("");
-			for (int j = 0; j < R; j++) {
+			for (int j = 0; j < R; j++) {	//x
 				miro[i][j] = miroInput[j];
 				
 				if("J".equals(miro[i][j])) {
@@ -58,7 +59,7 @@ public class BOJ_4179 {
 		}
 		
 		//fire bfs
-		while (!fQ.isEmpty()) {
+		while (!fQ.isEmpty()) {  
 			
 			int[] loc = fQ.poll();
 			
