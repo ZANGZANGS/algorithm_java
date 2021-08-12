@@ -1,56 +1,50 @@
 package breadthFirstSearch;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.io.IOException;
+import java.util.StringTokenizer;
 
+/**
+ * @source		: ë°±ì¤€
+ * @algorithm	: BFS
+ * @description	: ìˆ¨ë°”ê¼­ì§ˆ
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.08.09	10ë§Œì„ ì•ˆë„˜ì–´ê°€ë„ë¡ ë²”ìœ„ ì„¤ì •
+ */
 public class BOJ_1697 {
 
 	public static void main(String[] args) throws IOException{
-		int n,k;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String input = br.readLine();
-		n = Integer.parseInt(input.split(" ")[0]);
-		k = Integer.parseInt(input.split(" ")[1]);
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int[] dist = new int[100001];	// ÁÖÀÇ!! ¼öºóÀÌ°¡ ¿òÁ÷ÀÌ´Â ¹üÀ§´Â 0 ¡Â N ¡Â 100,000 ÀÌ´Ù!
+		int n = Integer.parseInt(st.nextToken());	//start	point
+		int k = Integer.parseInt(st.nextToken());	//end point
+		int[] dist = new int[100001];
 		
-		Queue<Integer> queue = new LinkedList<Integer>();
+		Arrays.fill(dist, -1);
+		dist[n] = 0;
 		
-		queue.add(n);
+		Queue<Integer> Q = new LinkedList<>();
+		Q.add(n);
 		
-		while (! queue.isEmpty()) {
+		while (dist[k] == -1) {
 			
-			int temp = queue.poll();
+			int cur = Q.poll();
 			
-			if(temp==k) {
-				System.out.println(dist[temp]);
-				return;
-			}
-
-			//1. ÇÑÄ­ÀÌµ¿ +
-			if(temp+1 <100001 && dist[temp+1] == 0){
-				queue.add(temp+1);
-				dist[temp+1] = dist[temp]+1;
+			for (Integer next : new int[]{cur-1, cur+1, cur*2}) {
+				if(next <0 || next>100000) continue;
+				if(dist[next] != -1) continue;
 				
+				dist[next] = dist[cur]+1;
+				Q.add(next);
 			}
-			//2. ÇÑÄ­ÀÌµ¿ -
-			if(temp-1 >=0 && dist[temp-1] == 0){
-				queue.add(temp-1);
-				dist[temp-1] = dist[temp]+1;
-				
-			}
-			//3. ¼ø°£ÀÌµ¿ 2¹èÀÌµ¿
-			if(2*temp < 100001 && dist[2*temp] == 0){
-				queue.add(2*temp);
-				dist[2*temp] = dist[temp]+1;
-				
-			}
-				
 		}
-		
+		System.out.println(dist[k]);
 	}
-
 }
