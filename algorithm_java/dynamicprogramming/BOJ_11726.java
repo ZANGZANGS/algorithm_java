@@ -10,9 +10,9 @@ import java.io.InputStreamReader;
  * ==============================================
  * DATE			NOTE	
  * ==============================================
- * 2021.08.19	
+ * 2021.08.19	정답보고 해결함. 다시 시도해 볼 것
  */
-//TODO 다시풀어 보자
+
 public class BOJ_11726 {
 
 	public static void main(String[] args) throws IOException{
@@ -20,23 +20,7 @@ public class BOJ_11726 {
 		
 		int n = Integer.parseInt(br.readLine());
 		
-		long[] dp = new long[n+1];
-		
-		if(n == 1) {
-			System.out.println(1);
-			return ;
-		}
-		
-		dp[1] = 1;
-		dp[2] = 2;
-		
-		for(int i=3 ; i <= n ; i++) {
-			dp[i] = (dp[i-1] + dp[i-2] )%10007;
-			
-		}
-		
-		System.out.println(dp[n]);
-		
+		//TODO 다시풀기
 	}
 
 }
