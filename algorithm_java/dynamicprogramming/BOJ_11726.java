@@ -3,28 +3,39 @@ package dynamicprogramming;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+/**
+ * @source		: 백준
+ * @algorithm	: DP
+ * @description	: 2xn 타일링
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.08.19	
+ */
+//TODO 다시풀어 보자
 public class BOJ_11726 {
 
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int n = Integer.parseInt(br.readLine());
-
+		
+		long[] dp = new long[n+1];
+		
 		if(n == 1) {
 			System.out.println(1);
-		}else {
-			int[] d = new int[n+1];
-			
-			d[1] = 1;
-			d[2] = 2;
-			for (int i = 3; i <= n; i++) {
-				
-				d[i] = Math.floorMod(d[i-1]+d[i-2],10007);
-			}
-			
-			System.out.println(d[n]);
+			return ;
 		}
+		
+		dp[1] = 1;
+		dp[2] = 2;
+		
+		for(int i=3 ; i <= n ; i++) {
+			dp[i] = (dp[i-1] + dp[i-2] )%10007;
+			
+		}
+		
+		System.out.println(dp[n]);
 		
 	}
 
