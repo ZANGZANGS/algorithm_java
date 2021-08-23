@@ -20,7 +20,7 @@ public class BOJ_11726 {
 		
 		int n = Integer.parseInt(br.readLine());
 		
-		//TODO 다시풀기
+		//TODO 다시풀기 
 	}
 
 }
