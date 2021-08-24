@@ -27,27 +27,8 @@ public class BOJ_1629 {
 		long b = Integer.parseInt(st.nextToken());
 		long c = Integer.parseInt(st.nextToken());
 		
-		
-		System.out.println(pow(a,b,c));
-	
-		
 	}
 	
 	
-	public static long pow(long a, long b, long c) {
-		if(b == 1) {
-			return a%c;
-		}
-		
-		long val = pow(a,b/2,c);
-		val = val * val % c;
-		
-		if(b%2 == 0) {
-			return val;
-		}else {
-			return val * a % c;
-		}
-		
-	}
 }
 
