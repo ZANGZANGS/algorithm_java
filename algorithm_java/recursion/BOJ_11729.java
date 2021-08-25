@@ -22,22 +22,6 @@ public class BOJ_11729 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int n = Integer.parseInt(br.readLine());
 		
-		sb.append((1<<n) -1);	//total count
-		sb.append("\n");
-		recur(1,3,n);
-		System.out.println(sb.toString());
 	}
 	
-	private static void recur(int start, int end, int n) {
-
-		if(n == 1) {
-			sb.append(start+" "+end+ "\n");
-			return ;
-		}
-		recur(start, 6-start-end, n-1);
-		sb.append(start+" "+end+ "\n");
-		recur(6-start-end, end, n-1);
-		
-		return ;
-	}
 }
