@@ -30,13 +30,13 @@ public class BOJ_2230 {
 		long[] arr = new long[N];
 		
 		for (int i = 0; i < arr.length; i++) {
-			arr[i] = Integer.parseInt(br.readLine());
+			arr[i] = Long.parseLong(br.readLine());
 		}
 		
 		Arrays.sort(arr);
 		
 		int en=0;
-		long result = Integer.MAX_VALUE;
+		long result = Long.MAX_VALUE;
 		
 		for (int i = 0; i < N; i++) {
 			while (en < N && arr[en]-arr[i] < M ) {
