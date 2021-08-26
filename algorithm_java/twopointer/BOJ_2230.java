@@ -27,7 +27,7 @@ public class BOJ_2230 {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		int[] arr = new int[N];
+		long[] arr = new long[N];
 		
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = Integer.parseInt(br.readLine());
@@ -36,7 +36,7 @@ public class BOJ_2230 {
 		Arrays.sort(arr);
 		
 		int en=0;
-		int result = Integer.MAX_VALUE;
+		long result = Integer.MAX_VALUE;
 		
 		for (int i = 0; i < N; i++) {
 			while (en < N && arr[en]-arr[i] < M ) {
