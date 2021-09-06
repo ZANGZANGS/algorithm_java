@@ -1,107 +1,83 @@
 package a_basic_component;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.OptionalDouble;
 
+/**
+ * @source		: programmers
+ * @algorithm	: sort
+ * @description	: 복서 정렬하기
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.07	2차원 배열 정렬하기
+ */
 public class PG_sortBoxer  {
 
 	public static void main(String[] args) throws IOException{
 		
-//		solution(new int[]{50,82,75,120}, new String[]{"NLWL","WNLL","LWNW","WWLN"});
+		solution(new int[]{50,82,75,120}, new String[]{"NLWL","WNLL","LWNW","WWLN"});
 //		solution(new int[]{145,92,86}, new String[]{"NLW","WNL","LWN"});
-		solution(new int[]{60,70,60}, new String[]{"NNN","NNN","NNN"});
+//		solution(new int[]{60,70,60}, new String[]{"NNN","NNN","NNN"});
 		
 	}
 	
-	public static int[] solution(int[] weights, String[] head2head) {
+	 public static int[] solution(int[] weights, String[] head2head) {
+        int[] answer = new int[weights.length];
         
-		
-		List<Boxer> list = new ArrayList<Boxer>();
-		
-		for (int i = 0; i < head2head.length; i++) {
-			
-			double winCnt = 0;
-			double totalGame= 0;
-			int winBigman = 0;
-			
-			Boxer boxer = new Boxer(i, weights[i]);
-			
-			for (int j = 0; j < head2head.length; j++) {
-				char[] chArr = head2head[i].toCharArray();
+        int[][] boxer = new int[weights.length][4];
+        
+        for (int i = 0; i < weights.length; i++) {
+        	int weight = weights[i];
+        	int cnt = 0;
+        	int win = 0;
+        	int winbigman = 0;
+        	
+        	for (int j = 0; j < weights.length; j++) {
+				char ch = head2head[i].charAt(j);
 				
-				if(chArr[j] == 'W') {
-					winCnt++;
-					totalGame++;
-					
-					if(weights[j] > weights[i]) {
-						winBigman++;
+				if(ch != 'N') cnt++;
+				if(ch == 'W') {
+					win++;
+					if(weights[i] <weights[j]) {
+						winbigman++;
 					}
-					
-				}else if(chArr[j] == 'L') {
-					totalGame++;
 				}
-			}
-			
-			
-			boxer.rateOfWin = Math.floor(OptionalDouble.of(winCnt/totalGame*100).orElse(0))/100;
-			boxer.winBigman = winBigman;
-			
-			list.add(boxer);
-		}
-		
-		Comparator<Boxer> comparator = new Comparator<Boxer>() {
-			
-			@Override
-			public int compare(Boxer o1, Boxer o2) {
-				// TODO Auto-generated method stub
 				
-				if(o1.rateOfWin > o2.rateOfWin) {
-					return -1;
-					
-				}else if(o1.rateOfWin < o2.rateOfWin){
-					return 1;
-					
-				}else {
-					 if(o1.winBigman > o2.winBigman) {
-						 return -1;
-					 }else if(o1.winBigman < o2.winBigman) {
-						 return 1;
-					 }else {
-						 if(o1.weight > o2.weight) {
-							 return -1;
-						 }else if(o1.weight < o2.weight) {
-							 return 1;
-						 }else {
-							 if(o1.index < o2.index) {
-								 return -1;
-							 }else {
-								 return 1;
-							 }
-						 }
-					 }
-				}
 			}
-		};
-		
-		//정렬
-        return list.stream().sorted(comparator).mapToInt(v -> v.index+1).toArray();
+        	
+        	boxer[i][0] = i + 1 ; // 원본 인덱스 +1
+        	boxer[i][1] = weights[i] ; // 몸무게
+        	boxer[i][2] = cnt != 0 ? (int) ((1.0 *win/cnt) * 100000) : 0 ; // 승률
+        	boxer[i][3] = winbigman; // 큰놈이랑 이긴 횟수
+			
+		}
+
+        Arrays.sort(boxer, (a, b) -> {
+            if(a[2] != b[2]) return b[2] - a[2];
+            if(a[3] != b[3]) return b[3] - a[3];
+            if(a[1] != b[1]) return b[1] - a[1];
+            return a[0] - b[0];
+        });
         
+//        Arrays.sort(boxer, new Comparator<int[]>() {
+//
+//			@Override
+//			public int compare(int[] o1, int[] o2) {
+//				if(o1[2] != o2[2]) return o2[2]-o1[2]; //승률
+//				if(o1[3] != o2[3]) return o2[3]-o1[3]; //큰놈이랑 싸움
+//				if(o1[1] != o2[1]) return o2[1]-o1[1]; //몸무게
+//				return o1[0] - o2[0];
+//			}
+//		});
+        
+        for (int i = 0; i < boxer.length; i++) {
+			answer[i] = (int)boxer[i][0]; //인덱스
+			
+		}
+        return answer;
     }
 	
 }
 
-class Boxer{
-	
-	int index;
-	double rateOfWin;
-	int winBigman;
-	int weight;
-	
-	public Boxer(int index, int weight) {
-		this.index = index;
-		this.weight = weight; 
-	}
-}
