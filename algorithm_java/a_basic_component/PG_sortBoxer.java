@@ -18,8 +18,8 @@ public class PG_sortBoxer  {
 	public static void main(String[] args) throws IOException{
 		
 		solution(new int[]{50,82,75,120}, new String[]{"NLWL","WNLL","LWNW","WWLN"});
-//		solution(new int[]{145,92,86}, new String[]{"NLW","WNL","LWN"});
-//		solution(new int[]{60,70,60}, new String[]{"NNN","NNN","NNN"});
+		solution(new int[]{145,92,86}, new String[]{"NLW","WNL","LWN"});
+		solution(new int[]{60,70,60}, new String[]{"NNN","NNN","NNN"});
 		
 	}
 	
@@ -54,23 +54,17 @@ public class PG_sortBoxer  {
 			
 		}
 
-        Arrays.sort(boxer, (a, b) -> {
-            if(a[2] != b[2]) return b[2] - a[2];
-            if(a[3] != b[3]) return b[3] - a[3];
-            if(a[1] != b[1]) return b[1] - a[1];
-            return a[0] - b[0];
-        });
         
-//        Arrays.sort(boxer, new Comparator<int[]>() {
-//
-//			@Override
-//			public int compare(int[] o1, int[] o2) {
-//				if(o1[2] != o2[2]) return o2[2]-o1[2]; //승률
-//				if(o1[3] != o2[3]) return o2[3]-o1[3]; //큰놈이랑 싸움
-//				if(o1[1] != o2[1]) return o2[1]-o1[1]; //몸무게
-//				return o1[0] - o2[0];
-//			}
-//		});
+        Arrays.sort(boxer, new Comparator<int[]>() {
+
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				if(o1[2] != o2[2]) return o2[2]-o1[2]; //승률
+				if(o1[3] != o2[3]) return o2[3]-o1[3]; //큰놈이랑 싸움
+				if(o1[1] != o2[1]) return o2[1]-o1[1]; //몸무게
+				return o1[0] - o2[0];
+			}
+		});
         
         for (int i = 0; i < boxer.length; i++) {
 			answer[i] = (int)boxer[i][0]; //인덱스
