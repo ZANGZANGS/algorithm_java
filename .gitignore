@@ -2,6 +2,5 @@
 .classpath
 .project
 .idea/
+*.class
 *.prefs
-algorithm_java/binarysearch/.gitignore
-algorithm_java/nf/.gitignore
