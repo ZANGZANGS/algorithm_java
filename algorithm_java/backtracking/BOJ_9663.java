@@ -4,44 +4,54 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * @source		: baekjoon
+ * @algorithm	: backtracking
+ * @description	: N-Queen
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.08	TODO 다시 풀기 ... 넘나 어려운 백트래킹..
+ */
 public class BOJ_9663 {
 	
-	static int n;
-	static int count = 0;
-	static boolean[] isUsed1;	// ���� ��� �Ǿ����� �Ǵ�
-	static boolean[] isUsed2;	// �����ϴܿ��� ������� �������� �밢�� ������� �Ǵ�
-	static boolean[] isUsed3;	// �����ϴܿ��� ������� �������� �밢�� ������� �Ǵ�
 
+	static int N;
+	static boolean[] isused1;
+	static boolean[] isused2;
+	static boolean[] isused3;
+	static int cnt = 0;
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		n = Integer.parseInt(br.readLine());
+		N = Integer.parseInt(br.readLine());
 		
-		isUsed1 = new boolean[n];
-		isUsed2 = new boolean[2*n+1];	// �밢�� ������ �� ������ 2*n-1��
-		isUsed3 = new boolean[2*n+1];	// �밢�� ������ �� ������ 2*n-1��
+		isused1 = new boolean[N];
+		isused2 = new boolean[2*N-1];  //X+Y
+		isused3 = new boolean[2*N-1];	//X-Y + N-1
 		
-		func(0);		
-		System.out.println(count);
+		func(0);
+		System.out.println(cnt);
 		
 	}
 	
-	private static void func(int cur) {
-		if(n == cur) {
-			count++;
-			return;
+	static void func(int cur) {
+		if(cur == N) {
+			cnt++;
+			return ;
 		}
-		for (int i = 0; i < n; i++) {
-			if(isUsed1[i] || isUsed2[i+cur] || isUsed3[cur-i+n-1]) continue;
-			
-			isUsed1[i] = true;
-			isUsed2[i + cur] = true;
-			isUsed3[cur-i+n-1] = true;
+		
+		for (int i = 0; i < N; i++) {
+			if(isused1[i] || isused2[i+cur] || isused3[cur-i+N-1]) continue;
+			isused1[i] = true;
+			isused2[cur+i] = true;
+			isused3[cur-i+N-1] = true;
 			func(cur+1);
-			isUsed1[i] = false;
-			isUsed2[i + cur] = false;
-			isUsed3[cur-i+n-1] = false;
+			isused1[i] = false;
+			isused2[cur+i] = false;
+			isused3[cur-i+N-1] = false;
+			
 		}
 	}
 
