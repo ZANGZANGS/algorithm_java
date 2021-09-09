@@ -3,47 +3,60 @@ package backtracking;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
+/**
+ * @source		: baekjoon
+ * @algorithm	: backtracking
+ * @description	: 부분수열의 합
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.09
+ */
 public class BOJ_1182 {
 
-	static int n,s,count;
+	
+	static int N,S;
+	static int cnt=0;
 	static int[] arr;
+	static boolean[] isused;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		String[] input = br.readLine().split(" ");
-		n = Integer.parseInt(input[0]);
-		s = Integer.parseInt(input[1]);
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		arr = new int[n];
-	
-		input = br.readLine().split(" ");
-		for (int i = 0; i < input.length; i++) {
-			arr[i] = Integer.parseInt(input[i]);
+		N = Integer.parseInt(st.nextToken());	//정수의 개수
+		S = Integer.parseInt(st.nextToken());	//부분 수열의 합
+		
+		arr= new int[N];
+		isused = new boolean[N];
+		
+		st = new StringTokenizer(br.readLine());
+		
+		for (int i = 0; i < N ; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		func(0,0);
-		if(s == 0) count--;	//s가 0이면 처음 시작시에 하나가 추가되버린다.
 		
-		System.out.println(count);
+		func(0, 0);
+		if(S == 0) cnt--;
+		System.out.println(cnt);
+		
 	}
 	
-	private static void func(int cur, int sum) {//합계
+	private static void func(int k, int sum) {
 		
-		if(n ==cur) {
-			if(s == sum) {// 1.맨 마지막까지 왔는지 2.합이 s와 동일하면 count 증가
-				count++;
-			}
-			return; //이때 리턴하지 않으면 cur이 n보다 커지는 문제가 발생한다. 주의!
+		if(k == N) {
+			if(sum == S) cnt+=1;
+			return;
 		}
 		
-		//1. 지금꺼 안 더하고 다음꺼 더하기
-		func(cur+1, sum);
+		func(k+1, sum); //안더하기
+		func(k+1, sum+arr[k]); // 더하기
 		
-		//2. 지금꺼 더하고 다음꺼 더하기
-		func(cur+1,  sum+arr[cur]);
-			
 	}
-
+	
+	
 }
