@@ -7,98 +7,88 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+/**
+ * @source		: baekjoon
+ * @algorithm	: bfs
+ * @description	: 벽 부수기
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.10	TODO 벽을 부순 경우 vs 안 부순 경우에 대한 방문체크를 다르게 한다.
+ */
 public class BOJ_2206  {
 
-	static int col;
-	static int row;
-	static int[] dx = {0,1,0,-1};
-	static int[] dy = {1,0,-1,0};
-	static Queue<int[]> Q;
-	
-	//1. ���� ����
-	static int[][] map;
-	//2. �Ÿ�����
-	static int[][] distA; //�� �Ⱥν���
-	static int[][] distB; //�� �ν���
-	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		col = Integer.parseInt(st.nextToken());
-		row = Integer.parseInt(st.nextToken());
-
-		//1. ���� ����
-		map = new int[col][row];
-		//2. �Ÿ� ����
-		distA = new int[col][row];
-		distB = new int[col][row];
+		int[] dx = {0,1,0,-1};
+		int[] dy = {1,0,-1,0};
 		
-		Q = new LinkedList<>();
 		
-		//���� ���� �Է�
-		for (int i = 0; i < col; i++) {
-			char[] input = br.readLine().toCharArray();
+		int N = Integer.parseInt(st.nextToken()); // Y
+		int M = Integer.parseInt(st.nextToken()); // X
+		
+		int[][] arr = new int[N][M];
+		int[][][] dist = new int[N][M][2];
+		
+		Queue<int[]> Q = new LinkedList<int[]>();
+		
+		for (int i = 0; i < N; i++) {
+			String in = br.readLine();
 			
-			for (int j = 0; j < row; j++) {
-				map[i][j] = input[j]-'0';
+			for (int j = 0; j < M; j++) {
+				arr[i][j] = in.charAt(j)-'0';
 			}
 		}
 		
-		distA[0][0] = 1;
-		distB[0][0] = 1;
-		Q.add(new int[] {0,0,0});//x,y, �� ���� Ƚ��
-
-		bfs();
-		int result = Integer.MAX_VALUE;
-		if(distA[col-1][row-1] != 0) result = Math.min(distA[col-1][row-1], result);
-		if(distB[col-1][row-1] != 0) result = Math.min(distB[col-1][row-1], result);
-		System.out.println(result != Integer.MAX_VALUE ? result : -1);
-	}
-	
-	static void bfs() {
+		Q.add(new int[] {0,0,1}); //x,y,block;
+		dist[0][0][1] = 1;
 		
 		while (!Q.isEmpty()) {
 			int[] temp = Q.poll();
 			
-			for (int i = 0; i < 4; i++) {
-				int nx = temp[0]+dx[i];
-				int ny = temp[1]+dy[i];
+			int x = temp[0];
+			int y = temp[1];
+			int block = temp[2]; // 0: 이미 벽 뚫음 1: 안뚫음
+			
+			for (int k = 0; k < 4; k++) {
+				int nx = x + dx[k];
+				int ny = y + dy[k];
 				
-				boolean isBroken = temp[2]==1 ? true : false;
+				//범위
+				if(nx < 0 || ny < 0 || nx >= M || ny >= N) continue;
 				
-				// ����1 ���� ������� Ȯ��
-				if(nx < 0 || ny < 0 || nx >= row || ny >= col) continue;
+				if(dist[ny][nx][1] > 0 && block == 1) continue;
+				if(dist[ny][nx][0] > 0 && block == 0) continue;
 				
-				//����2 �湮 ���� Ȯ��
-				if(distA[ny][nx] > 0 && !isBroken) continue;
-				if(distB[ny][nx] > 0 && isBroken) continue;
-				
-				//����3 ���� �Ұ� ���� ������, �̹� ���� �μ�
-				if(map[ny][nx] == 1 && isBroken) {
-					continue;
+				//벽 못 부숨
+				if(arr[ny][nx] == 1 && block == 0) continue;
 					
-				} 
-				//����4 ���� �������� ���� �μ� �� ����
-				if(map[ny][nx] == 1 && !isBroken) {
-					distB[ny][nx] = distA[temp[1]][temp[0]]+1;
-					Q.add(new int[] {nx,ny, 1});
-					
+				//벽 부수기
+				if(arr[ny][nx] == 1 && block == 1) {
+					dist[ny][nx][0] = dist[y][x][1] +1;
+					Q.add(new int[]{nx, ny, 0});
 				}
 				
-				//���̿��� ��� ����
-				if(map[ny][nx] == 0 ) {//����
-					if(isBroken) {
-						distB[ny][nx] = distB[temp[1]][temp[0]]+1;
+				//그냥 길
+				if(arr[ny][nx] == 0) {
+					if(block == 1) {
+						dist[ny][nx][1] = dist[y][x][1] +1;
 					}else {
-						distA[ny][nx] = distA[temp[1]][temp[0]]+1;
+						dist[ny][nx][0] = dist[y][x][0] +1;
 					}
-					Q.add(new int[] {nx,ny, temp[2]});
 					
+					Q.add(new int[]{nx, ny, block});
 				}
+						
 			}
-		
 		}
+		
+		int result = Integer.MAX_VALUE;
+		if(dist[N-1][M-1][0] != 0) result = Math.min(dist[N-1][M-1][0], result);
+		if(dist[N-1][M-1][1] != 0) result = Math.min(dist[N-1][M-1][1], result);
+		System.out.println(result != Integer.MAX_VALUE ? result : -1);
 	}
 }
