@@ -3,72 +3,59 @@ package breadthFirstSearch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 
 
+/**
+ * @source		: baekjoon
+ * @algorithm	: bfs
+ * @description	: 스타트링크
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.13	이동가능한 층수는 1~ 100000이다.
+ */
 public class BOJ_5014  {
-	static int F;	//�ǹ� ����	G �� F �� 1000000
-	static int S;	//��ȣ ��ġ	1 �� S,
-	static int G;	//������
-	static int U;	//�ö󰡴� ��ư		0 �� U, D �� 1000000
-	static int D;	//�������� ��ư
 	
-	static Queue<Integer> Q;
-
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		F =Integer.parseInt(st.nextToken());
-		S =Integer.parseInt(st.nextToken());
-		G =Integer.parseInt(st.nextToken());
-		U =Integer.parseInt(st.nextToken());
-		D =Integer.parseInt(st.nextToken());
-		Q = new LinkedList<>();
+		int F =Integer.parseInt(st.nextToken()); //건물층수
+		int S =Integer.parseInt(st.nextToken()); //start
+		int G =Integer.parseInt(st.nextToken()); //end
+		int U =Integer.parseInt(st.nextToken()); //up
+		int D =Integer.parseInt(st.nextToken()); //down
+		Queue<Integer> Q = new LinkedList<>();
 		
-		int[] move = new int[F];
-		boolean[] vis = new boolean[F];
+		int[] dist = new int[F+1];
+		Arrays.fill(dist, -1);
 		
-		if(S == G) {//������ �ʿ䰡 ���� ��� 0 ���
-			System.out.println(0);
-		}else {
-			vis[S-1] = true;
-			Q.add(S-1);
+		Q.add(S);
+		dist[S] = 0;
+		
+		while (!Q.isEmpty()) {
+			int cur = Q.poll();
 			
-			while (!Q.isEmpty()) {
+			for (int tar : new int[] {cur+U, cur-D}) {
+				if(tar <=0 || tar >F) continue; // 0은 없는 층이다.
+				if(dist[tar] != -1) continue; //이미 방문
 				
-				int cur = Q.poll();
-				
-				//�ö󰡱�
-				if(cur+U < F) {
-					//�湮�� ���ߴٸ�
-					if(!vis[cur+U]) {
-						vis[cur+U] = true;
-						move[cur+U] = move[cur]+1;
-						Q.add(cur+U);
-					}
-				}
-				
-				//��������
-				if(cur-D >= 0) {
-					//�湮�� ���ߴٸ�
-					if(!vis[cur-D]) {
-						vis[cur-D] = true;
-						move[cur-D] = move[cur]+1;
-						Q.add(cur-D);
-					}
-				}
-				
+				Q.add(tar);
+				dist[tar] = dist[cur]+1;
 			}
-			
-			System.out.println(move[G-1] == 0 ? "use the stairs" : move[G-1]);
 		}
 		
-		
+		if(dist[G] == -1) {
+			System.out.println("use the stairs");
+		}else {
+			System.out.println(dist[G]);
+		}
 		
 	}
 
