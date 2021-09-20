@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -31,11 +32,21 @@ public class BOJ_3197 {
 		int C = Integer.parseInt(st.nextToken()); //x
 		
 		char[][] map = new char[R][C];
-		boolean[][] vis = new boolean[R][C]; 
+		boolean[][] vis = new boolean[R][C];
+		int[][] distStart = new int[R][C];
+		int[][] distEnd = new int[R][C];
+		
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < C; j++) {
+				distStart[i][j] = -1;
+				distEnd[i][j] = -1;
+			}
+		}
+		
 		
 		List<int[]> startEnd = new ArrayList<int[]>();
 		
-		int resultDays = -1;
+		int resultDays = Integer.MAX_VALUE;
 		
 		for (int i = 0; i < R; i++) {
 			String temp = br.readLine();
@@ -56,91 +67,101 @@ public class BOJ_3197 {
 		int endX =  startEnd.get(1)[0];
 		int endY =  startEnd.get(1)[1];
 
-		while(!vis[endY][endX]) {
-
-			//vis array init false;
-			for(boolean[] inner : vis) {
-				for (int i = 0; i < inner.length; i++) {
-					inner[i] = false;
-					
-				}
-			}
-			
-			/******************/
-			Queue<int[]> Q = new LinkedList<int[]>();
-			
-			Q.add(startEnd.get(0)); //x,y
-			
-			vis[startY][startX] = true;
-			
-			while (!Q.isEmpty()) {
-				int[] cur = Q.poll();
-				int x = cur[0];
-				int y = cur[1];
+//		Queue<int[]> Q = new LinkedList<int[]>();
+		PriorityQueue<int[]> Q = new PriorityQueue<int[]>((a,b)-> a[2]-b[2]);
+		
+		Q.add(new int[] {startX, startY, 0});
+		vis[startY][startX] = true;
+		distStart[startY][startX] = 0;
+		
+		while (!Q.isEmpty()) {
+			 int[] cur = Q.poll();
+			 
+			 int x = cur[0];
+			 int y = cur[1];
+			 int distance = cur[2];
+			 
+			 for (int k = 0; k < 4; k++) {
 				
-				for (int k = 0; k < 4; k++) {
-					int nx = x+ dx[k];
-					int ny = y+ dy[k];
-					
-					if(nx<0 || ny< 0|| nx>=C || ny>= R) continue;//범위
-					if(vis[ny][nx]) continue;
-					if(map[ny][nx] == 'X')continue;
-					
-					vis[ny][nx] = true;
-					Q.add(new int[] {nx,ny});
-					
-					
-				}
+				 int nx = x + dx[k];
+				 int ny = y + dy[k];
+				 
+				 if(nx<0 || ny < 0 || nx >= C || ny >= R) continue;
+				 if(vis[ny][nx]) continue;
+				 
+				 
+				 vis[ny][nx] = true;
+//				 Q.add(new int[] {nx,ny});
+				 
+				 if(map[ny][nx] == 'X' ) {
+					 Q.add(new int[] {nx,ny, distance+1});
+					 distStart[ny][nx] = distance+1;
+				 }else {
+					 Q.add(new int[] {nx,ny, distance});
+					 distStart[ny][nx] = distance;
+				 }
+				 
+				
 			}
-			/******************/
 			
-			resultDays ++;
-			map = melt(map);
 		}
-	
+		
+		
+		
+		/*********************/
+		vis = new boolean[R][C];
+		Q = new PriorityQueue<int[]>((a,b)-> a[2]-b[2]);
+		
+		Q.add(new int[] {endX, endY, 0});
+		vis[endY][endX] = true;
+		distEnd[endY][endX] = 0;
+		
+		while (!Q.isEmpty()) {
+			 int[] cur = Q.poll();
+			 
+			 int x = cur[0];
+			 int y = cur[1];
+			 int distance = cur[2];
+			 
+			 for (int k = 0; k < 4; k++) {
+				
+				 int nx = x + dx[k];
+				 int ny = y + dy[k];
+				 
+				 if(nx<0 || ny < 0 || nx >= C || ny >= R) continue;
+				 if(vis[ny][nx]) continue;
+				 
+				 
+				 vis[ny][nx] = true;
+//				 Q.add(new int[] {nx,ny});
+				 
+				 if(map[ny][nx] == 'X' ) {
+					 Q.add(new int[] {nx,ny, distance+1});
+					 distEnd[ny][nx] = distance+1;
+				 }else {
+					 Q.add(new int[] {nx,ny, distance});
+					 distEnd[ny][nx] = distance;
+				 }
+				 
+				
+			}
+			
+		}
+		
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < C; j++) {
+				if(distStart[i][j] == distEnd[i][j]) {
+					resultDays = Math.min(resultDays, distStart[i][j]);
+				}else if(distStart[i][j] > distEnd[i][j]) {
+					resultDays = Math.min(resultDays, distStart[i][j]-1);
+				}
+					
+			}
+		}
+		
 		System.out.println(resultDays);
 		
-		
 	}
 	
 	
-	public static char[][] melt(char[][] map) {
-		int r = map.length;		//y
-		int c = map[0].length;	//x
-		
-		char[][] after = new char[r][c];
-		
-		for (int i = 0; i < r; i++) {
-			for (int j = 0; j < c; j++) {
-				
-				if( map[i][j] != 'X') {
-					after[i][j] = map[i][j];	
-				}else {
-					//X 기준으로 물을 만나는지 4방향 확인.
-					after[i][j] = 'X';
-					
-					for (int k = 0; k < 4; k++) {
-						int nx = j+ dx[k];
-						int ny = i+ dy[k];
-						
-						if(nx<0 || ny< 0|| nx>=c || ny>= r)continue;//범위
-						
-						//빙판이 호수와 접촉하면 녹음
-						if(map[ny][nx] == '.') {
-							after[i][j] = '.';
-							break;
-						}
-						
-					}
-				}
-				
-				
-			}
-			
-		}
-		
-		return after;
-		
-	}
-
 }
