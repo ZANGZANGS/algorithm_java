@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -23,31 +22,40 @@ public class BOJ_3197 {
 	
 	static int[] dx = {0,1,0,-1};
 	static int[] dy = {1,0,-1,0};
-
+	static int R;
+	static int C;
+	static char[][] map;
+	static boolean[][] visSwan;
+	static boolean[][] visWater;
+	static Queue<int[]> waterQ;
+	static Queue<int[]> waterNextQ;
+	static Queue<int[]> swanQ;
+	static Queue<int[]> swanNextQ;
+	
+	static int startX;
+	static int startY;
+	static int endX;
+	static int endY;
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int R = Integer.parseInt(st.nextToken()); //y
-		int C = Integer.parseInt(st.nextToken()); //x
+		R = Integer.parseInt(st.nextToken()); //y
+		C = Integer.parseInt(st.nextToken()); //x
 		
-		char[][] map = new char[R][C];
-		boolean[][] vis = new boolean[R][C];
-		int[][] distStart = new int[R][C];
-		int[][] distEnd = new int[R][C];
+		map = new char[R][C];
+		visSwan = new boolean[R][C];
+		visWater = new boolean[R][C];
 		
-		for (int i = 0; i < R; i++) {
-			for (int j = 0; j < C; j++) {
-				distStart[i][j] = -1;
-				distEnd[i][j] = -1;
-			}
-		}
+		waterQ = new LinkedList<int[]>();
+		waterNextQ = new LinkedList<int[]>();
+		swanQ = new LinkedList<int[]>();
+		swanNextQ = new LinkedList<int[]>();
 		
+		int resultDays = 0;
 		
 		List<int[]> startEnd = new ArrayList<int[]>();
-		
-		int resultDays = Integer.MAX_VALUE;
-		
 		for (int i = 0; i < R; i++) {
 			String temp = br.readLine();
 			for (int j = 0; j < C; j++) {
@@ -56,111 +64,116 @@ public class BOJ_3197 {
 				if(temp.charAt(j) == 'L') {
 					startEnd.add(new int[] {j,i}); //x,y
 				}
-					
 			}
-			
 		}
 		
-		int startX =  startEnd.get(0)[0];
-		int startY =  startEnd.get(0)[1];
+		startX =  startEnd.get(0)[0];
+		startY =  startEnd.get(0)[1];
 		
-		int endX =  startEnd.get(1)[0];
-		int endY =  startEnd.get(1)[1];
+		endX =  startEnd.get(1)[0];
+		endY =  startEnd.get(1)[1];
 
-//		Queue<int[]> Q = new LinkedList<int[]>();
-		PriorityQueue<int[]> Q = new PriorityQueue<int[]>((a,b)-> a[2]-b[2]);
+		swanQ.add(new int[] {startX, startY});
+		visSwan[startY][startX] = true;
 		
-		Q.add(new int[] {startX, startY, 0});
-		vis[startY][startX] = true;
-		distStart[startY][startX] = 0;
-		
-		while (!Q.isEmpty()) {
-			 int[] cur = Q.poll();
-			 
-			 int x = cur[0];
-			 int y = cur[1];
-			 int distance = cur[2];
-			 
-			 for (int k = 0; k < 4; k++) {
-				
-				 int nx = x + dx[k];
-				 int ny = y + dy[k];
-				 
-				 if(nx<0 || ny < 0 || nx >= C || ny >= R) continue;
-				 if(vis[ny][nx]) continue;
-				 
-				 
-				 vis[ny][nx] = true;
-//				 Q.add(new int[] {nx,ny});
-				 
-				 if(map[ny][nx] == 'X' ) {
-					 Q.add(new int[] {nx,ny, distance+1});
-					 distStart[ny][nx] = distance+1;
-				 }else {
-					 Q.add(new int[] {nx,ny, distance});
-					 distStart[ny][nx] = distance;
-				 }
-				 
-				
-			}
-			
-		}
-		
-		
-		
-		/*********************/
-		vis = new boolean[R][C];
-		Q = new PriorityQueue<int[]>((a,b)-> a[2]-b[2]);
-		
-		Q.add(new int[] {endX, endY, 0});
-		vis[endY][endX] = true;
-		distEnd[endY][endX] = 0;
-		
-		while (!Q.isEmpty()) {
-			 int[] cur = Q.poll();
-			 
-			 int x = cur[0];
-			 int y = cur[1];
-			 int distance = cur[2];
-			 
-			 for (int k = 0; k < 4; k++) {
-				
-				 int nx = x + dx[k];
-				 int ny = y + dy[k];
-				 
-				 if(nx<0 || ny < 0 || nx >= C || ny >= R) continue;
-				 if(vis[ny][nx]) continue;
-				 
-				 
-				 vis[ny][nx] = true;
-//				 Q.add(new int[] {nx,ny});
-				 
-				 if(map[ny][nx] == 'X' ) {
-					 Q.add(new int[] {nx,ny, distance+1});
-					 distEnd[ny][nx] = distance+1;
-				 }else {
-					 Q.add(new int[] {nx,ny, distance});
-					 distEnd[ny][nx] = distance;
-				 }
-				 
-				
-			}
-			
-		}
+		swanBFS();
 		
 		for (int i = 0; i < R; i++) {
 			for (int j = 0; j < C; j++) {
-				if(distStart[i][j] == distEnd[i][j]) {
-					resultDays = Math.min(resultDays, distStart[i][j]);
-				}else if(distStart[i][j] > distEnd[i][j]) {
-					resultDays = Math.min(resultDays, distStart[i][j]-1);
+				if(map[i][j] == '.' && !visWater[i][j]) {
+					waterQ.add(new int[] {j,i});
+					waterBFS();
 				}
-					
+				
 			}
+			
+		}
+		
+		while (!visSwan[endY][endX]) {
+			resultDays++;
+			changeMap();
+			swanBFS();
+			waterBFS();
 		}
 		
 		System.out.println(resultDays);
 		
+	}
+	
+	private static void swanBFS() {
+		
+		while (!swanQ.isEmpty()) {
+
+			int[] cur = swanQ.poll();
+
+			int x = cur[0];
+			int y = cur[1];
+
+			for (int k = 0; k < 4; k++) {
+				int nx = x + dx[k];
+				int ny = y + dy[k];
+
+				if (nx < 0 || ny < 0 || nx >= C || ny >= R)	continue;
+				if (visSwan[ny][nx]) continue;
+
+				
+				if (map[ny][nx] == 'X') {
+					swanNextQ.add(new int[] { nx, ny });
+				} else {
+					swanQ.add(new int[] { nx, ny });
+					visSwan[ny][nx] = true;
+				}
+			}
+		}
+	}
+	
+	private static void waterBFS() {
+		while (!waterQ.isEmpty()) {
+
+			int[] cur = waterQ.poll();
+
+			int x = cur[0];
+			int y = cur[1];
+
+			for (int k = 0; k < 4; k++) {
+				int nx = x + dx[k];
+				int ny = y + dy[k];
+
+				if (nx < 0 || ny < 0 || nx >= C || ny >= R)	continue;
+				if (visWater[ny][nx]) continue;
+
+				
+				if (map[ny][nx] == 'X') {
+					waterNextQ.add(new int[] { nx, ny });
+				} else {
+					waterQ.add(new int[] { nx, ny });
+					visWater[ny][nx] = true;
+				}
+			}
+		}
+	}
+	
+	private static void changeMap() {
+		
+		while (!swanNextQ.isEmpty()) {
+			int[] temp =swanNextQ.poll();
+			int x = temp[0];
+			int y = temp[1];
+			map[y][x] = '.';
+			
+			swanQ.add(temp);
+			visSwan[y][x] = true;
+		}
+		
+		while (!waterNextQ.isEmpty()) {
+			int[] temp =waterNextQ.poll();
+			int x = temp[0];
+			int y = temp[1];
+			map[y][x] = '.';
+			
+			waterQ.add(temp);
+			visWater[y][x] = true;
+		}
 	}
 	
 	
