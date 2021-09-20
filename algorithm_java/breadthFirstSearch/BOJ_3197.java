@@ -26,7 +26,9 @@ public class BOJ_3197 {
 	static int C;
 	static char[][] map;
 	static boolean[][] visSwan;
+	static boolean[][] visNextSwan;
 	static boolean[][] visWater;
+	static boolean[][] visNextWater;
 	static Queue<int[]> waterQ;
 	static Queue<int[]> waterNextQ;
 	static Queue<int[]> swanQ;
@@ -46,7 +48,9 @@ public class BOJ_3197 {
 		
 		map = new char[R][C];
 		visSwan = new boolean[R][C];
+		visNextSwan = new boolean[R][C];
 		visWater = new boolean[R][C];
+		visNextWater = new boolean[R][C];
 		
 		waterQ = new LinkedList<int[]>();
 		waterNextQ = new LinkedList<int[]>();
@@ -56,6 +60,7 @@ public class BOJ_3197 {
 		int resultDays = 0;
 		
 		List<int[]> startEnd = new ArrayList<int[]>();
+		
 		for (int i = 0; i < R; i++) {
 			String temp = br.readLine();
 			for (int j = 0; j < C; j++) {
@@ -67,11 +72,18 @@ public class BOJ_3197 {
 			}
 		}
 		
+		
+		//두 백조가 같은 위치인 경우
+		if(startEnd.size() == 1) {
+			System.out.println(0);
+			return;
+		}
+		
 		startX =  startEnd.get(0)[0];
 		startY =  startEnd.get(0)[1];
-		
 		endX =  startEnd.get(1)[0];
 		endY =  startEnd.get(1)[1];
+		
 
 		swanQ.add(new int[] {startX, startY});
 		visSwan[startY][startX] = true;
@@ -82,6 +94,7 @@ public class BOJ_3197 {
 			for (int j = 0; j < C; j++) {
 				if(map[i][j] == '.' && !visWater[i][j]) {
 					waterQ.add(new int[] {j,i});
+					visWater[i][j] = true;
 					waterBFS();
 				}
 				
@@ -118,7 +131,10 @@ public class BOJ_3197 {
 
 				
 				if (map[ny][nx] == 'X') {
-					swanNextQ.add(new int[] { nx, ny });
+					if(!visNextSwan[ny][nx]) {
+						swanNextQ.add(new int[] { nx, ny });
+						visNextSwan[ny][nx] = true;
+					}
 				} else {
 					swanQ.add(new int[] { nx, ny });
 					visSwan[ny][nx] = true;
@@ -144,7 +160,11 @@ public class BOJ_3197 {
 
 				
 				if (map[ny][nx] == 'X') {
-					waterNextQ.add(new int[] { nx, ny });
+					
+					if(!visNextWater[ny][nx]) {
+						waterNextQ.add(new int[] { nx, ny });
+						visNextWater[ny][nx] = true;
+					}
 				} else {
 					waterQ.add(new int[] { nx, ny });
 					visWater[ny][nx] = true;
