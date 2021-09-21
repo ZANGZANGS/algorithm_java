@@ -33,43 +33,31 @@ public class BOJ_11967 {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		boolean[][] vis = new boolean[N+1][N+1];
-		boolean[][] isLight = new boolean[N+1][N+1];
-		boolean[][] hasSwith = new boolean[N+1][N+1];
+		boolean[][] vis = new boolean[N][N];
+		boolean[][] isLight = new boolean[N][N];
 		
-		Map<String, List<int[]>> map = new HashMap<>();
-		
+		List<int[]>[][] switchList = new ArrayList[N][N];
 		
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
+			int x = Integer.parseInt(st.nextToken())-1;
+			int y = Integer.parseInt(st.nextToken())-1;
+			int a = Integer.parseInt(st.nextToken())-1;
+			int b = Integer.parseInt(st.nextToken())-1;
 			
-			hasSwith[y][x] = true;
 			
-			String lightSwitch = createKey(x,y);
-			int[] bulb = new int[] {a,b};
-			
-			List<int[]> bulbList;
-			if(map.containsKey(lightSwitch)) {
-				bulbList = map.get(lightSwitch);
-				bulbList.add(bulb);
-				map.put(lightSwitch, bulbList);
-			}else {
-				bulbList = new ArrayList<int[]>();
-				bulbList.add(bulb);
-				map.put(lightSwitch, bulbList);
+			if(null == switchList[y][x]) {
+				switchList[y][x] = new ArrayList<int[]>();
 			}
 			
+			switchList[y][x].add(new int[] {a,b}); 
+						
 		}
-		
 
 		Queue<int[]> Q = new LinkedList<int[]>();
-		Q.add(new int[] {1,1});
-		vis[1][1] = true;
-		isLight[1][1] = true;
+		Q.add(new int[] {0,0});
+		vis[0][0] = true;
+		isLight[0][0] = true;
 		int result = 1;
 		
 		while (!Q.isEmpty()) {
@@ -80,8 +68,8 @@ public class BOJ_11967 {
 			
 			
 			//turn on the bulb
-			if(hasSwith[y][x]) {
-				List<int[]> swichList = map.get(createKey(x, y));
+			if(switchList[y][x] != null) {
+				List<int[]> swichList = switchList[y][x];
 				
 				for (int[] swich : swichList) {
 					if(!isLight[swich[1]][swich[0]]) {
@@ -90,8 +78,8 @@ public class BOJ_11967 {
 						for (int k = 0; k < 4; k++) {
 							int nx = swich[0] + dx[k];
 							int ny = swich[1] + dy[k];							
-							if(nx < 1 || ny < 1 || nx> N || ny > N) continue;
-							if(vis[ny][nx]) {
+							if(nx < 0 || ny < 0 || nx>= N || ny >= N) continue;
+							if(vis[ny][nx]) { 
 								Q.add(new int[] {nx,ny});	//important
 								break;
 							}
@@ -107,7 +95,7 @@ public class BOJ_11967 {
 				int nx = x + dx[k];
 				int ny = y + dy[k];
 				
-				if(nx < 1 || ny < 1 || nx> N || ny > N) continue;
+				if(nx < 0 || ny < 0 || nx>= N || ny >= N) continue;
 				if(vis[ny][nx]) continue;
 				if(isLight[ny][nx]) {
 					Q.add(new int[] {nx,ny});
@@ -120,13 +108,7 @@ public class BOJ_11967 {
 		}
 		
 		System.out.println(result);
-
-		
 		
 	}
-	
-	private static String createKey(int x, int y) {
-		return x+ "@"+y;
-	};
 
 }
