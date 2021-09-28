@@ -12,7 +12,8 @@ import java.util.StringTokenizer;
  * ==============================================
  * DATE			NOTE	
  * ==============================================
- * 2021.09.09
+ * 2021.09.09	다시풀기
+ * 2021.09.28	성공
  */
 public class BOJ_1074 {
 	
@@ -24,31 +25,32 @@ public class BOJ_1074 {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		int N = Integer.parseInt(st.nextToken()); 
-		int r = Integer.parseInt(st.nextToken()); 
-		int c = Integer.parseInt(st.nextToken()); 
+		int r = Integer.parseInt(st.nextToken());  //y
+		int c = Integer.parseInt(st.nextToken());  //x
 		
-		System.out.println(func(N,r,c));
+		int result = func(N, r, c);
+		
+		System.out.println(result);
+		
 	}
 	
-	private static int func(int n, int r, int c) {
-	
-		if(n ==0) {
+	private static int func(int N, int r, int c) {
+		
+		if(N == 0) {
 			return 0;
 		}
-		int half = 1 << (n-1);
 		
-		if( c < half && r < half) {
-			return func(n-1, r, c); //1번 사각형
-		}else if( c >= half && r < half) {
-			return half*half + func(n-1, r, c-half); //2번 사각형
-		}else if( c < half && r >= half) {
-			return 2*half*half + func(n-1, r-half, c); //3번 사각형
+		int half = 1 << (N-1);
+		
+		if(r < half && c < half) {
+			return func(N-1, r, c);
+		}else if(r < half && c >= half) {
+			return half*half + func(N-1, r, c-half);
+		}else if(r >= half && c < half) {
+			return 2*half*half + func(N-1, r-half, c);
 		}else {
-			return 3*half*half + func(n-1, r-half, c-half); //4번 사각형
+			return 3*half*half + func(N-1, r-half, c-half);
 		}
+		
 	}
 }
-
-
-
-
