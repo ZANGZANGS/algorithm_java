@@ -4,6 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * @source		: baekjoon
+ * @algorithm	: recursion
+ * @description	: 재귀함수가 뭔가요?
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.09.29	성공
+ */
 public class BOJ_17478 {
 
 	static int n;
@@ -15,37 +24,54 @@ public class BOJ_17478 {
 		sb = new StringBuilder();
 		
 		sb.append("어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.\n");
-		func(0);
-		System.out.println(sb.toString());
+		
+		recursion(0);
+		
+		System.out.println(sb.toString().trim());
 	}
 	
-	static void func(int num) {
-		String under = underLine(num);
-		sb.append(under+"\"재귀함수가 뭔가요?\"\n");
-		if(n == num) {
+	private static void recursion(int k) {
+		
+		String underline = underLine(k);
+		
+		
+		sb.append(underline);
+		sb.append("\"재귀함수가 뭔가요?\"\n");
+		
+		
+		if(k == n) {
+			sb.append(underline);
+			sb.append("\"재귀함수는 자기 자신을 호출하는 함수라네\"\n");
+			sb.append(underline);
+			sb.append("라고 답변하였지.\n");
+		}else {
+			sb.append(underline);
+			sb.append("\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.\n");
+			sb.append(underline);
+			sb.append("마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.\n");
+			sb.append(underline);
+			sb.append("그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어.\"\n");
 			
-			sb.append(under+"\"재귀함수는 자기 자신을 호출하는 함수라네\"\n");
-			sb.append(under+"라고 답변하였지.\n");
-			return;
+			recursion(k+1);
+			
+			sb.append(underline);
+			sb.append("라고 답변하였지.\n");
 		}
 		
-		sb.append(under+"\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.\n");
-		sb.append(under+"마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.\n");
-		sb.append(under+"그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어.\"\n");
-		func(num+1);
-		sb.append(under+"라고 답변하였지.\n");
+		
+		
 		
 	}
 	
-	static String underLine(int n) {
-		String temp = "";
+	private static String underLine(int k) {
 		
-		for (int i = 0; i < n; i++) {
-			temp = temp.concat("____");
+		StringBuilder underline = new StringBuilder();
+		
+		for (int i = 0; i < k; i++) {
+			underline.append("____");
 		}
 		
-		return temp;
-		
+		return underline.toString();
 	}
 
 }
