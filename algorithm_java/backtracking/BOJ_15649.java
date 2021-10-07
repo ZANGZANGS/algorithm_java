@@ -3,6 +3,7 @@ package backtracking;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -13,6 +14,7 @@ import java.util.StringTokenizer;
  * DATE			NOTE	
  * ==============================================
  * 2021.09.07	다시 풀자..
+ * 2021.10.07	성공! 재귀 연습한 효과가 있었따~
  */
 public class BOJ_15649 {
 	
@@ -32,32 +34,33 @@ public class BOJ_15649 {
 		arr = new int[M]; // 배열 담을 갯수
 		isused = new boolean[10]; // 숫자 사용 여부
 		
-		
 		func(0);
+		
 		System.out.println(sb.toString());
+
 		
 	}
 	
-	public static void func(int k){
-		
+	private static void func(int k) {
 		if(k == M) {
-			for (int i = 0; i < M; i++) {
-				sb.append(arr[i]+" ");
+			for(int i=0; i < M ; i++) {
+				sb.append(arr[i]);
+				sb.append(" ");
 			}
 			sb.append("\n");
 			return;
 		}
 		
-		for (int i = 1; i <= N; i++) {// 1 ~ N
-			if(!isused[i]) {
-				arr[k] = i;
-				isused[i] = true;
-				func(k+1);
-				isused[i] = false;
-			}
+		for (int i = 1; i <= N; i++) {
+			
+			if(isused[i]) continue;
+			
+			isused[i] = true;
+			arr[k] = i;
+			func(k+1);
+			isused[i] = false;
 			
 		}
-		
-		
 	}
+	
 }
