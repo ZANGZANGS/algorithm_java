@@ -15,7 +15,8 @@ import java.util.StringTokenizer;
 * ==============================================
 * DATE			NOTE	
 * ==============================================
-* 2021.10.13	TODO 실패
+* 2021.10.13	실패
+* 2021.10.14	TODO 풀이보고 이해함 다시 풀어보자ㅏ
 */
 public class BOJ_15663 {
 
@@ -49,8 +50,10 @@ public class BOJ_15663 {
 	}
 	
 	private static void func(int k) {
+		
+		int previous = -1;
 		if(k == M) {
-			for (int i = 0; i < M; i++) {
+			for (int i = 0; i < k; i++) {
 
 				sb.append(arr[i]);
 				sb.append(" ");
@@ -58,30 +61,22 @@ public class BOJ_15663 {
 			
 			sb.append("\n");
 			
-			
 			return;
 		}
 		
+		
+		
 		for (int i = 0; i < N; i++) {
 			
-			
-			if(!isUsed[i]) {
+			if(!isUsed[i] && previous != input[i]) {
 				
-				if( i>0 && input[i-1] == input[i]) {
-					arr[k] = input[i];
-					func(k+1);
-					continue;
-				}
-
 				isUsed[i] = true;
 				arr[k] = input[i];
+				previous = input[i];
 				func(k+1);
 				isUsed[i] = false;
 			}
 			
-			
-			
 		}
 	}
-
 }
