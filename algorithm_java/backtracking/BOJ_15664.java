@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 /**
 * @source		: baekjoon
 * @algorithm	: backtracking
-* @description	: N& M (11)
+* @description	: N& M (10)
 * ==============================================
 * DATE			NOTE	
 * ==============================================
