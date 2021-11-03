@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 * DATE			NOTE	
 * ==============================================
 * 2021.11.02	투포인터로 풀었넴..
+* 2021.11.03	이분탐색
 */
 public class BOJ_2467 {
 
@@ -28,29 +29,42 @@ public class BOJ_2467 {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		int start = 0;
-		int end = N-1;
-		long sum = Long.MAX_VALUE;
+		
 		
 		long result[] = new long[2];
+		long sum = Long.MAX_VALUE;
 		
-		while (start< end) {
+		for (int i = 0; i<N ; i++) {
+			long tar = arr[i]; 
+		
+			int start = i+1;
+			int end = N-1;
 			
-			if(Math.abs(sum) >= Math.abs(arr[start] + arr[end])) {
-				sum = arr[start] + arr[end];
-				result[0] = arr[start];
-				result[1] = arr[end];
+			
+			while (start<= end) {
+				
+				int mid = (start + end)/2;
+				
+				if(sum > Math.abs(arr[mid] + tar) ) {
+					sum = Math.abs(arr[mid] + tar);
+					result[0] = arr[i];
+					result[1] = arr[mid];
+				}
+				
+				
+				if(arr[mid] + tar  == 0) {
+					System.out.println(result[0] + " " + result[1]);
+					return;
+				}else if(arr[mid] + tar  > 0) {
+					end = mid-1;
+				}else if(arr[mid] + tar  < 0) {
+					start = mid +1;
+				}
+				
 			}
-			
-			if(arr[start] + arr[end] == 0) {
-				break;
-			}else if(arr[start] + arr[end] > 0) {
-				end -=1;
-			}else if(arr[start] + arr[end] < 0) {
-				start += 1;
-			}
-			
 		}
+		
+		
 		
 		System.out.println(result[0] + " " + result[1]);
 	}
