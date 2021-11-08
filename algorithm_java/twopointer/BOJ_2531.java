@@ -15,9 +15,10 @@ public class BOJ_2531 {
 * DATE			NOTE	
 * ==============================================
 * 2021.11.08	실패
+* 2021.11.09	성공
 */
 	public static void main(String[] args) throws IOException{
-		
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -36,29 +37,24 @@ public class BOJ_2531 {
 			arr[i] = Integer.parseInt(br.readLine());
 		}
 		
-		int pointer = 0;
+		for (int i = 0; i < k; i++) {
+			susi[arr[i]]++;
+		}
+		
+		max = (int)Arrays.stream(susi).filter(v-> v>0).count();
+		if(susi[c] == 0) max++;
 		
 		for (int i = 0; i < N; i++) {
-		
-			susi = new int[d+1];
 			
-			for (int j = i; j <= i+k; j++) {
-				
-				int idx = j%N;
-				susi[arr[idx]] = 1;
-			}
+			int idx = (i+k)%N;
+			susi[arr[idx]]++;
+			susi[arr[i]]--;
 			
-			int count = Arrays.stream(susi).sum();
-			
-			if(susi[c]==0) {
-				count++;
-			}
-			
+			int count = (int)Arrays.stream(susi).filter(v-> v>0).count();
+			if(susi[c] == 0) count++;
 			max = Math.max(max, count);
-			
 		}
 		System.out.println(max);
-		
 	}
 
 }
