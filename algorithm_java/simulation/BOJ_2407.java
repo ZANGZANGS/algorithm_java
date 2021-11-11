@@ -3,6 +3,7 @@ package simulation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.StringTokenizer;
 /**
 * @source		: baekjoon
@@ -12,6 +13,7 @@ import java.util.StringTokenizer;
 * DATE			NOTE	
 * ==============================================
 * 2021.11.11	구현 실패
+* 2021.11.12	BigInteger를 사용하여 해결
 */
 public class BOJ_2407 {
 
@@ -26,11 +28,10 @@ public class BOJ_2407 {
 		
 		if(m > n-m) m = n-m;
 
-		long ans=1;
+		BigInteger ans = BigInteger.ONE;
 		
 		for (int i = 0; i < m; i++) {
-			ans = ans*(n-i)/(i+1); 
-			
+			ans = ans.multiply(new BigInteger(String.valueOf(n-i))).divide(new BigInteger(String.valueOf(i+1)));
 		}
 		
 		System.out.println(ans);
