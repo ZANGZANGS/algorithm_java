@@ -1,4 +1,4 @@
-package a_basic_component;
+package twopointer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
