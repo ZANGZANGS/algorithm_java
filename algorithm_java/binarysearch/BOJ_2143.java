@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * @source		: baekjoon
  * @algorithm	: 이분탐색
- * @description	: 좋다
+ * @description	: 두 배열의 합
  * ==============================================
  * DATE			NOTE	
  * ==============================================
