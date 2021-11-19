@@ -1,11 +1,11 @@
-package a_basic_component;
+package binarysearch;
 
 import java.io.*;
 import java.util.*;
 
 /**
  * @source		: baekjoon
- * @algorithm	: 투포인터
+ * @algorithm	: 이분탐색
  * @description	: 좋다
  * ==============================================
  * DATE			NOTE	
