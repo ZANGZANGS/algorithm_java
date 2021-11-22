@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 /**
  * @source		: baekjoon
- * @algorithm	: 이분탐색
+ * @algorithm	: 투 포인터
  * @description	: 소수의 연속합
  * ==============================================
  * DATE			NOTE	
