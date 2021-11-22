@@ -3,6 +3,7 @@ package twopointer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -15,6 +16,10 @@ import java.util.StringTokenizer;
  * 2021.11.22	실패
  * 				1.메모리 초과
  * 				2.시간 초과
+ * 				
+ * 2021.11.22	성공
+ * 				1. 투 포인터
+ * 				2. total 의 최대값은 100억으로 long 변수 여야 한다.
  */
 public class BOJ_13144 {
 
@@ -28,29 +33,37 @@ public class BOJ_13144 {
 			seq[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		int count = 0;
+		long total = 0;
 		
-		boolean[] isUsed = new boolean[100001];
+		int[] count = new int[100001];
 		
 		
+		int lp=0;
+		int rp=-1;
+//		int rp=0;
+//		count[rp]++;
 		
-		for (int i = 0; i < N; i++) {
+		while(lp< N) {
 			
-			if(i>0)	isUsed[i-1] = false;
-			
-			for (int j = i; j < seq.length; j++) {
-
-				int tar = seq[j];
-				
-				if(isUsed[tar]) break;
-				isUsed[tar] = true;
-				count++;
-				
+			//right 오른 쪽으로 한칸 이동
+			//같은 숫자 나올 때 까지
+			while (rp+1 < N && count[seq[rp+1]] == 0) {
+				rp++;
+				count[seq[rp]]++;
 				
 			}
+			
+			total += (rp-lp+1);
+			
+
+			// left 오른 쪽으로 한칸 이동
+			count[seq[lp]]--;
+			lp++;
 		}
 		
-		System.out.println(count);
+		
+		
+		System.out.println(total);
 		
 	}
 
