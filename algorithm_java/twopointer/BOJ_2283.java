@@ -12,8 +12,11 @@ import java.util.StringTokenizer;
  * ==============================================
  * DATE			NOTE	
  * ==============================================
- * 2021.11.25	성공
+ * 2021.11.25	실패
  * 				70% fail
+ * 2021.11.26	성공
+ * 				rp +1이 증가되는데 while 문의 범위를 잘못 잡음
+ * 				
  */
 public class BOJ_2283 {
 
@@ -39,37 +42,31 @@ public class BOJ_2283 {
 			
 		}
 		
-		Arrays.sort(arr, (a,b)-> {
-			return a[0] == b[0] ? a[1]-b[1] : a[0]-b[0];
-		});
 		
-		int len = 0;
+		long len = 0;
 		int lp = 0;
 		int rp = 0;
-		while (lp < maxLen && rp < maxLen) {
+		while (lp < maxLen && rp-1 < maxLen) {
 			
-			
-			
-			while (rp < maxLen && len < K) {
-				
+			if(len == K) {
+				System.out.println(lp + " " + rp);
+				return;
+			}
+			if(len < K) {
+				rp++;
 				for (int[] i : arr) {
 					if(i[0] < rp && rp <= i[1]) len++;
 				}
-				rp++;
+//				System.out.println("rp: "+ rp + "\tlen: "+len);
+				continue;
 			}
-			
-			while (lp < maxLen && len > K) {
-				
+			if(len > K){
 				for (int[] i : arr) {
 					if(i[0] <= lp && lp < i[1]) len--;
 				}
-				
+//				System.out.println("lp: "+ lp + "\tlen: "+len);
 				lp++;
-			}
-			
-			if(len == K) {
-				System.out.println(lp + " " + (rp-1));
-				return;
+				continue;
 			}
 			
 		}
