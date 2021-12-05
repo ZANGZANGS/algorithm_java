@@ -8,182 +8,212 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
+import java.util.StringTokenizer;
+import java.util.stream.Stream;
+/**
+ * @source		: baekjoon
+ * @algorithm	: 구현
+ * @description	: 감시
+ * ==============================================
+ * DATE			NOTE	
+ * ==============================================
+ * 2021.12.05	성공
+ */
 public class BOJ_15683 {
 
-	static int[][] arr ;
+	static int[][] office;
 	static List<int[]> list = new ArrayList<>();
-	static int n;
-	static int m;
-	static int cctvArea;
+	static int N, M;
+	static int max = 0;
+	static int[] cctvView;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		char[] input = br.readLine().toCharArray();
-		n = input[0]-'0'; 
-		m = input[2]-'0';
-		
-		arr = new int[n][m];
-		
-		
-		for (int i = 0; i < n; i++) {
-			input = br.readLine().replaceAll(" ", "").toCharArray();
-			for (int j = 0; j <m; j++) {
-				int temp = input[j]-'0';
-				arr[i][j] = temp;
-				if(temp > 0 && temp <6)list.add(new int[] {i,j});
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		office = new int[N][M];
+		int wall = 0;
+
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				office[i][j] = Integer.parseInt(st.nextToken());
+				if( 1 <= office[i][j] && office[i][j] <= 5) {
+					list.add(new int[] {office[i][j], i,j});
+				}else if(office[i][j] == 6) wall++;
+				
 			}
+
 		}
+
+		cctvView = new int[list.size()];
+		bt(0);
 		
-		func(0);
-		
-		
-		System.out.println();
+		System.out.println(N*M -(max + wall));
 	}
 
-	public static void func(int k) {
-		
-		
-		if(list.size()-1 == k) {
-			int tempMax = 0;
+	//1번 4가지 1 2 3 4
+	//2번 2가지 5 6
+	//3번 4가지 7 8 9 10
+	//4번 4가지 11 12 13 14
+	//5번 1가지 15
+	
+	private static void bt(int k) {
+		if(k == list.size()) {
 			
-			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < m; j++) {
-					if(arr[i][j] == 0) tempMax++;
+			int[][] see = new int[N][M];
+			
+			for (int i = 0 ; i< list.size() ; i++) {
+				int[] info = list.get(i);
+				
+				int cctvType = info[0]; //cctv종류
+				int y = info[1];
+				int x = info[2];
+				
+				if(cctvType == 1) {
+					
+					if(cctvView[i] == 1) {//1 동
+						seeEast(see, x, y);//동
+					}else if(cctvView[i] == 2) {//2 서
+						seeWest(see, x, y);//서
+					}else if(cctvView[i] == 3) {//3 남
+						seeSouth(see, x, y);//남
+					}else if(cctvView[i] == 4) {//4 북
+						seeNorth(see, x, y);//북						
+					}
+				}else if(cctvType == 2) {
+					
+					if(cctvView[i] == 5) { //5 동서
+						seeEast(see, x, y);//동
+						seeWest(see, x, y);//서
+						
+					}else if(cctvView[i] == 6) { //6 남북
+						seeSouth(see, x, y);//남
+						seeNorth(see, x, y);//북						
+					}
+					
+				}else if(cctvType == 3) {
+					
+
+					if(cctvView[i] == 7) { //7 북동
+						seeEast(see, x, y);//동
+						seeNorth(see, x, y);//북	
+					} else if(cctvView[i] == 8) { //8 동남
+						seeEast(see, x, y);//동
+						seeSouth(see, x, y);//남
+					} else if(cctvView[i] == 9) { //9 남서
+						seeWest(see, x, y);//서
+						seeSouth(see, x, y);//남
+					} else if(cctvView[i] == 10) { //10 서북
+						seeWest(see, x, y);//서
+						seeNorth(see, x, y);//북	
+						
+					}
+						
+					
+				}else if(cctvType == 4) {
+					if(cctvView[i] == 11) { //11 서북동
+						seeEast(see, x, y);//동
+						seeWest(see, x, y);//서
+						seeNorth(see, x, y);//북
+					} else if(cctvView[i] == 12) { //12 북동남
+						seeEast(see, x, y);//동
+						seeSouth(see, x, y);//남
+						seeNorth(see, x, y);//북
+					} else if(cctvView[i] == 13) { //13 동남서
+						seeEast(see, x, y);//동
+						seeWest(see, x, y);//서
+						seeSouth(see, x, y);//남
+					} else if(cctvView[i] == 14) { //14 남서북
+						seeWest(see, x, y);//서
+						seeSouth(see, x, y);//남
+						seeNorth(see, x, y);//북
+					}
+						
+				}else {//5번
+					seeEast(see, x, y);//동
+					seeWest(see, x, y);//서
+					seeSouth(see, x, y);//남
+					seeNorth(see, x, y);//북
 				}
 			}
 			
-			cctvArea = Math.max(cctvArea, tempMax); // 계산하고,,
-			return;	//리스트 마지막에오면 그냥 반환.
+	
+			int total = 0;
+			for (int[] rows : see) {
+				for (int cur : rows) {
+					total += cur;
+				}
+			}
+			
+			max = Math.max(total, max);
+			return;
 		}
 		
-		int[] temp = list.get(k);
-		int x = temp[0];
-		int y = temp[1];
-		Stack<int[]> stack = new Stack<int[]>();
+		int[] tmp = list.get(k);
 		
-		if(arr[x][y] == 1) {
-			//1.
-			for (int i = x+1; i < n; i++) {
-				
-				if(arr[i][y] == 6)break;
-				if(arr[i][y] == 0) {
-					arr[i][y] = -1;
-					stack.add(new int[] {i,y});
-				}
+
+		if(tmp[0] == 1) {
+			for (int i=1; i<=4; i++) {
+				cctvView[k] = i;
+				bt(k+1);
 			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			
-			//2.
-			for (int i = 0; i < x; i++) {
-				
-				if(arr[i][y] == 6)break;
-				if(arr[i][y] == 0) {
-					arr[i][y] = -1;
-					stack.add(new int[] {i,y});
-				}
+		}else if(tmp[0] == 2) {
+			for (int i=5; i<=6; i++) {
+				cctvView[k] = i;
+				bt(k+1);
 			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			//3.
-			for (int i = 0; i < y; i++) {
-				
-				if(arr[x][i] == 6)break;
-				if(arr[x][i] == 0) {
-					arr[x][i] = -1;
-					stack.add(new int[] {x,i});
-				}
+		}else if(tmp[0] == 3) {
+			for (int i=7; i<=10; i++) {
+				cctvView[k] = i;
+				bt(k+1);
 			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			//4.
-			for (int i = y+1; i < m; i++) {
-				
-				if(arr[x][i] == 6)break;
-				if(arr[x][i] == 0) {
-					arr[x][i] = -1;
-					stack.add(new int[] {x,i});
-				}
+		}else if(tmp[0] == 4) {
+			for (int i=11; i<=14; i++) {
+				cctvView[k] = i;
+				bt(k+1);
 			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			
-			
-		}else if(arr[x][y] == 2) {
-			
-			//1.
-			for (int i = 0; i <n; i++) {
-				
-				if(arr[i][y] == 6)break;
-				if(arr[i][y] == 0) {
-					arr[i][y] = -1;
-					stack.add(new int[] {i,y});
-				}
-			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			//2.
-			for (int i = 0; i < m; i++) {
-				
-				if(arr[x][i] == 6)break;
-				if(arr[x][i] == 0) {
-					arr[x][i] = -1;
-					stack.add(new int[] {x,i});
-				}
-			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			
-		}else if(arr[x][y] == 3) {
-			//1.
-			for (int i = 0; i <n; i++) {
-				if(i>n) break;
-				if(arr[i][y] == 6)break;
-				if(arr[i][y] == 0) {
-					arr[i][y] = -1;
-					stack.add(new int[] {i,y});
-				}
-			}
-			for (int i = y+1; i < m; i++) {
-				if(i>m) break;
-				if(arr[x][i] == 6)break;
-				if(arr[x][i] == 0) {
-					arr[x][i] = -1;
-					stack.add(new int[] {x,i});
-				}
-			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
-			
-		}else if(arr[x][y] == 4) {
-			
-		}else if(arr[x][x] == 5) {
-			for (int i = 0; i <n; i++) {
-				
-				if(arr[i][y] == 6)break;
-				if(arr[i][y] == 0) {
-					arr[i][y] = -1;
-					stack.add(new int[] {i,y});
-				}
-			}
-			for (int i = 0; i < m; i++) {
-				
-				if(arr[x][i] == 6)break;
-				if(arr[x][i] == 0) {
-					arr[x][i] = -1;
-					stack.add(new int[] {x,i});
-				}
-			}
-			func(k+1);
-			stack.forEach(v-> arr[v[0]][v[1]] = 1);
-			stack.clear();
+		}else {
+			cctvView[k] = 15;
+			bt(k+1);
+		}
+		
+
+	}
+	
+	
+	private static void seeEast(int[][] map, int x, int y) { //동
+		while (x<M) {
+			if(office[y][x] == 6) break;
+			map[y][x] = 1;
+			x++;
 		}
 	}
+	private static void seeWest(int[][] map, int x, int y) {//서
+		while (0<=x) {
+			if(office[y][x] == 6) break;
+			map[y][x] = 1;
+			x--;
+		}
+		
+	}
+	private static void seeSouth(int[][] map, int x, int y) {//남
+		while (0<=y) {
+			if(office[y][x] == 6) break;
+			map[y][x] = 1;
+			y--;
+		}
+		
+	}
+	private static void seeNorth(int[][] map, int x, int y) {//북
+		while (y<N) {
+			if(office[y][x] == 6) break;
+			map[y][x] = 1;
+			y++;
+		}
+	}
+	
+	
 }
