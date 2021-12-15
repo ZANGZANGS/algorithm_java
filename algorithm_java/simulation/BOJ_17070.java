@@ -3,8 +3,6 @@ package simulation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 /**
 * @source		: baekjoon
@@ -14,16 +12,17 @@ import java.util.StringTokenizer;
 * DATE			NOTE	
 * ==============================================
 * 2021.12.15	시간초과
+* 2021.12.15	DP 풀이로 성공
 */
 public class BOJ_17070 {
 
-	static int N;
-	static int[][] map;
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));;
 		
-		N = Integer.parseInt(br.readLine());
-		map = new int[N][N];
+		int N = Integer.parseInt(br.readLine());
+		int[][] map = new int[N][N];
+		int[][][] dp = new int[3][N][N]; //0가로 1세로 2대각
+		
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < N; j++) {
@@ -32,92 +31,48 @@ public class BOJ_17070 {
 			
 		}
 		
-	
-		//방향 정보. 끝점?
-		Queue<int[]> Q = new LinkedList<int[]>();
-		
-		Q.add(new int[] {1,0,0}); //0가로 1세로 2대각
 		
 		
 
-		int count = 0;
+		dp[0][0][1] = 1; //0가로 1세로 2대각
 		
-		
-		
-		while (!Q.isEmpty()) {
-			int[] tmp = Q.poll();
-			
-			int x = tmp[0];
-			int y = tmp[1];
-			int dir = tmp[2]; //0가로 1세로 2대각
-
-			if(x == N-1 && y == N-1) count++;
-			
-			if(dir == 0) {
-				//가로 -> 가로
-				if(right(x,y)) Q.add(new int[] {x+1,y,0});
-
-				//가로 -> 대각
-				if(cross(x, y)) Q.add(new int[] {x+1,y+1,2});
-	
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if(map[i][j] == 1) continue;
 				
-			} else if(dir == 1) {
-				//세로 -> 세로
-				if(down(x, y)) Q.add(new int[] {x,y+1,1});
-				//세로 -> 대각
-				if(cross(x, y)) Q.add(new int[] {x+1,y+1,2});
-			} else if(dir == 2) {
-				//대각 -> 가로
-				if(right(x,y)) Q.add(new int[] {x+1,y,0});
+				//재방문 X
+				if(dp[0][i][j] >0) continue;
+				if(dp[1][i][j] >0) continue;
+				if(dp[2][i][j] >0) continue;
 				
-				//대각 -> 세로
-				if(down(x, y)) Q.add(new int[] {x,y+1,1});
 				
-				//대각 -> 대각
-				if(cross(x, y)) Q.add(new int[] {x+1,y+1,2});
+				if(i-1>=0 && j-1>=0 //배열 인덱스 범위 체크 
+						&& map[i-1][j] != 1 && map[i][j-1] != 1) {//벽 확인
+					//대각 도착
+					dp[2][i][j] = dp[0][i-1][j-1] + dp[1][i-1][j-1] + dp[2][i-1][j-1];
+				}
+				
+				if(j-1>= 0) {
+					//가로 도착
+					dp[0][i][j] = dp[0][i][j-1] + dp[2][i][j-1];
+				}
+				
+				if(i-1>=0) {
+					//세로 도착
+					dp[1][i][j] = dp[1][i-1][j] + dp[2][i-1][j];
+				}
+				
+				
+				
 			}
-			
 		}
 		
-		System.out.println(count);
+
+		
+		System.out.println(dp[0][N-1][N-1]+dp[1][N-1][N-1]+dp[2][N-1][N-1]);
 		
 	}
 	
-	private static boolean right(int x, int y) {
-		int nx = x + 1;
-		int ny = y + 0;
-		
-		if(nx<0 || ny<0 || nx>=N || ny>= N) return false;
-		if(map[ny][nx]==1) return false;
-		
-		return true;
-	}
 
-	private static boolean down(int x, int y) {
-		int nx = x + 0;
-		int ny = y + 1;
-		
-		if(nx<0 || ny<0 || nx>=N || ny>= N) return false;
-		if(map[ny][nx]==1) return false;
-		
-		return true;
-	}
-
-	private static boolean cross(int x, int y) {
-		
-		int[] dx = new int[] {1,0,1};
-		int[] dy = new int[] {0,1,1};
-		
-		for (int k = 0; k < 3; k++) {
-			
-			int cx = x + dx[k];
-			int cy = y + dy[k];
-			
-			if(cx<0 || cy<0 || cx>=N || cy>= N) return false;
-			if(map[cy][cx]==1) return false;
-		}
-		
-		return true;
-	}
 
 }
