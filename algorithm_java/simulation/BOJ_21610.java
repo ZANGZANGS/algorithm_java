@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 * DATE			NOTE	
 * ==============================================
 * 2021.12.16	시간초과
+* 2021.12.16	구름을 찾기 위해 O(N^3) 걸리던 시간을 boolean배열을 추가로 사용하여 O(N^2) 로 바꿈
 */
 public class BOJ_21610 {
 
@@ -36,7 +37,9 @@ public class BOJ_21610 {
 		}
 		
 		
-
+		
+		
+		
 		List<int[]> clound = new ArrayList<>();
 		
 		clound.add(new int[] {N-1, 0}); //(N, 1)
@@ -49,12 +52,11 @@ public class BOJ_21610 {
 		
 		for (int c = 0; c < M; c++) {
 			st = new StringTokenizer(br.readLine());
-
+			boolean[][] isCloud = new boolean[N][N];
 			//←, ↖, ↑, ↗, →, ↘, ↓, ↙
 			int d = Integer.parseInt(st.nextToken());
 			int s = Integer.parseInt(st.nextToken());
 			
-
 			
 			if(d == 1) {//←
 				for (int[] cu : clound) {
@@ -131,11 +133,11 @@ public class BOJ_21610 {
 			//구름이 있는 칸에 비가 1씩 내리고 구름은 사라진다.
 			for (int[] cu : clound) {
 				map[cu[0]][cu[1]]++;
+				isCloud[cu[0]][cu[1]] = true;
+				
 			}
 			
 			//대각선 방향에 따라 물이 증가한다.
-			
-			
 			for (int[] cu : clound) {
 				int cnt = 0;
 				for (int k = 0; k < 4; k++) {
@@ -159,19 +161,14 @@ public class BOJ_21610 {
 				for (int j = 0; j < N; j++) {
 					
 					if(map[i][j] < 2) continue;
-					
-					boolean isCloud = false;
-					for (int[] cd : clound) {			// 구름이 있던 칸 제외
-						if(i == cd[0] && j == cd[1]) {
-							isCloud = true;
-							break;
-						}
+					if(isCloud[i][j]) {
+						continue;
 					}
-					if(isCloud) continue;
 					
 					
 					map[i][j] -=2;
 					cloundNext.add(new int[] {i,j});
+					
 				}
 				
 			}
@@ -198,8 +195,6 @@ public class BOJ_21610 {
 		
 		System.out.println(sum);
 
-		
-		
 	}
 
 }
