@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 * DATE			NOTE	
 * ==============================================
 * 2021.12.16	시간초과
+* 2021.12.16	구름을 찾기 위해 O(N^3) 걸리던 시간을 boolean배열을 추가로 사용하여 O(N^2) 로 바꿈
 */
 public class BOJ_21610 {
 
