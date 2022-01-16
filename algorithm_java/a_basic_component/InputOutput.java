@@ -28,7 +28,6 @@ public class InputOutput  {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		
 	}
 
 }
