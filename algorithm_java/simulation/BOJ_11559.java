@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 /**
- * @source		: programmers
+ * @source		: 백준
  * @algorithm	: 시물레이션
  * @description	: Puyo Puyo
  * ==============================================
